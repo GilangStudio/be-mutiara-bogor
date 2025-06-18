@@ -120,6 +120,10 @@
                     </div>
                 </div>
             </div>
+
+            {{-- SEO Meta --}}
+            @include('components.seo-meta-form', ['data' => $news, 'type' => 'edit'])
+            
         </div>
 
         {{-- Sidebar --}}

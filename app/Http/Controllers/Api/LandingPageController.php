@@ -10,6 +10,7 @@ use App\Models\Facility;
 use App\Models\ConceptPage;
 use App\Models\HomeFeature;
 use App\Models\SocialMedia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\CompanyProfile;
 use App\Models\ContactMessage;
@@ -353,6 +354,9 @@ class LandingPageController extends Controller
                     'slug' => $project->slug,
                     'short_description' => $project->short_description,
                     'description' => $project->description,
+                    'meta_title' => $project->meta_title,
+                    'meta_description' => $project->meta_description,
+                    'meta_keywords' => $project->meta_keywords,
                     'main_image_url' => $project->main_image_url,
                     'banner_url' => $project->banner_url,
                     'logo_url' => $project->logo_url,
@@ -444,6 +448,9 @@ class LandingPageController extends Controller
                     'slug' => $unit->slug,
                     'short_description' => $unit->short_description,
                     'description' => $unit->description,
+                    'meta_title' => $unit->meta_title,
+                    'meta_description' => $unit->meta_description,
+                    'meta_keywords' => $unit->meta_keywords,
                     'bedrooms' => $unit->bedrooms,
                     'bathrooms' => $unit->bathrooms,
                     'carports' => $unit->carports,
@@ -568,6 +575,10 @@ class LandingPageController extends Controller
                         'title' => $news->title,
                         'slug' => $news->slug,
                         'content' => $news->content,
+                        'meta_title' => $news->meta_title,
+                        'meta_description' => $news->meta_description,
+                        'meta_keywords' => $news->meta_keywords,
+                        'excerpt' => Str::limit(strip_tags($news->content), 100), // Limit to 100 characters
                         'image_url' => $news->image_url,
                         'author' => $news->author,
                         'published_at' => $news->published_at->format('Y-m-d H:i:s'),

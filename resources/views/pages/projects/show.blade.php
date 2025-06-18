@@ -170,7 +170,7 @@
                         <div class="mb-0">
                             <label class="form-label text-secondary">Full Description</label>
                             <div class="markdown">
-                                {!! nl2br(e($project->description)) !!}
+                                {!! $project->description !!}
                             </div>
                         </div>
                     </div>
@@ -435,6 +435,9 @@
                 </div>
             </div>
         </div>
+
+        {{-- SEO Meta --}}
+        @include('components.seo-meta-form', ['data' => $project, 'type' => 'show'])
 
         {{-- Meta Information --}}
         <div class="card mt-3">

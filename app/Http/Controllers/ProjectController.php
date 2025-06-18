@@ -31,6 +31,9 @@ class ProjectController extends Controller
             'name' => 'required|string|max:255|unique:projects,name',
             'short_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string|max:255',
             'main_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120', // 5MB
             'banner_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
             'logo_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048', // 2MB
@@ -49,6 +52,9 @@ class ProjectController extends Controller
             'name.unique' => 'Project name already exists',
             'name.max' => 'Project name cannot exceed 255 characters',
             'short_description.max' => 'Short description cannot exceed 500 characters',
+            'meta_title.max' => 'Meta title cannot exceed 255 characters',
+            'meta_description.max' => 'Meta description cannot exceed 500 characters',
+            'meta_keywords.max' => 'Meta keywords cannot exceed 255 characters',
             'main_image.required' => 'Main image is required',
             'main_image.image' => 'File must be an image',
             'main_image.max' => 'Main image size cannot exceed 5MB',
@@ -112,6 +118,9 @@ class ProjectController extends Controller
                 'slug' => $slug,
                 'short_description' => $request->short_description,
                 'description' => $request->description,
+                'meta_title' => $request->meta_title,
+                'meta_description' => $request->meta_description,
+                'meta_keywords' => $request->meta_keywords,
                 'main_image_path' => $mainImagePath,
                 'banner_path' => $bannerPath,
                 'logo_path' => $logoPath,
@@ -176,6 +185,9 @@ class ProjectController extends Controller
             'name' => 'required|string|max:255|unique:projects,name,' . $project->id,
             'short_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string|max:255',
             'main_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'logo_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -199,6 +211,9 @@ class ProjectController extends Controller
             'name.unique' => 'Project name already exists',
             'name.max' => 'Project name cannot exceed 255 characters',
             'short_description.max' => 'Short description cannot exceed 500 characters',
+            'meta_title.max' => 'Meta title cannot exceed 255 characters',
+            'meta_description.max' => 'Meta description cannot exceed 500 characters',
+            'meta_keywords.max' => 'Meta keywords cannot exceed 255 characters',
             'main_image.image' => 'File must be an image',
             'main_image.max' => 'Main image size cannot exceed 5MB',
             'banner_image.image' => 'File must be an image',
@@ -257,6 +272,9 @@ class ProjectController extends Controller
                 'slug' => $slug,
                 'short_description' => $request->short_description,
                 'description' => $request->description,
+                'meta_title' => $request->meta_title,
+                'meta_description' => $request->meta_description,
+                'meta_keywords' => $request->meta_keywords,
                 'main_image_path' => $mainImagePath,
                 'banner_path' => $bannerPath,
                 'logo_path' => $logoPath,
@@ -279,9 +297,6 @@ class ProjectController extends Controller
             if ($request->hasFile('facility_images')) {
                 $this->uploadFacilityImages($project, $request);
             }
-
-            // return redirect()->route('development.project.index')
-            //                ->with('success', 'Project updated successfully');
 
             return redirect()->back()
                            ->with('success', 'Project updated successfully');

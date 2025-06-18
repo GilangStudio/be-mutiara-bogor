@@ -109,6 +109,9 @@
                 </div>
             </div>
 
+            {{-- SEO Meta --}}
+            @include('components.seo-meta-form', ['data' => 'create', 'type' => 'create'])
+
             {{-- Unit Specifications --}}
             <div class="card mt-3">
                 <div class="card-header">

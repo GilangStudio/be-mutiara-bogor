@@ -293,6 +293,9 @@
                     </div>
                 </div>
             </div>
+
+            {{-- SEO Meta --}}
+            @include('components.seo-meta-form', ['data' => $project, 'type' => 'edit'])
         </div>
 
         {{-- Sidebar --}}
@@ -833,7 +836,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Character counter for short description
         const shortDescTextarea = document.querySelector('textarea[name="short_description"]');
         const charCount = document.getElementById('short-desc-count');
         

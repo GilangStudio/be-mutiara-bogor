@@ -59,4 +59,20 @@ class Unit extends Model
     {
         return $this->floor_plan_image_path ? asset('storage/' . $this->floor_plan_image_path) : null;
     }
+
+    // Meta SEO Accessors
+    public function getMetaTitleDisplayAttribute()
+    {
+        return $this->meta_title ?: $this->title;
+    }
+
+    public function getMetaDescriptionDisplayAttribute()
+    {
+        return $this->meta_description ?: $this->excerpt;
+    }
+
+    public function getMetaKeywordsDisplayAttribute()
+    {
+        return $this->meta_keywords ?: '';
+    }
 }

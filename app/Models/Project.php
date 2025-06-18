@@ -70,4 +70,20 @@ class Project extends Model
     {
         return $this->siteplan_image_path ? asset('storage/' . $this->siteplan_image_path) : null;
     }
+
+    // Meta SEO Accessors
+    public function getMetaTitleDisplayAttribute()
+    {
+        return $this->meta_title ?: $this->name;
+    }
+
+    public function getMetaDescriptionDisplayAttribute()
+    {
+        return $this->meta_description ?: $this->short_description;
+    }
+
+    public function getMetaKeywordsDisplayAttribute()
+    {
+        return $this->meta_keywords ?: '';
+    }
 }

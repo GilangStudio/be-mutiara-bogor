@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('meta_keywords')->nullable();
             $table->integer('bedrooms')->nullable();
             $table->integer('bathrooms')->nullable();
             $table->integer('carports')->nullable();

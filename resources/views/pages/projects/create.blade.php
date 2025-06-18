@@ -1,10 +1,9 @@
 @extends('layouts.main')
 
-@section('title', 'Create Project')
+@section('title', 'Buat Project Baru')
 
 @push('styles')
 <style>
-    /* Gallery styling */
     .gallery-item {
         transition: all 0.3s ease;
         position: relative;
@@ -29,9 +28,12 @@
 
 @section('header')
 <div class="d-flex justify-content-between align-items-center">
-    <h2 class="page-title">Create New Project</h2>
+    <div>
+        <h2 class="page-title">Buat Project Baru</h2>
+        <div class="page-subtitle text-secondary">Tambahkan project pengembangan baru</div>
+    </div>
     <a href="{{ route('development.project.index') }}" class="btn btn-outline-secondary">
-        <i class="ti ti-arrow-left me-1"></i> Back to Projects
+        <i class="ti ti-arrow-left me-1"></i> Kembali ke Project
     </a>
 </div>
 @endsection
@@ -57,25 +59,15 @@
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="ti ti-info-circle me-2"></i>Basic Information</h3>
+                    <h3 class="card-title"><i class="ti ti-info-circle me-2"></i>Informasi Dasar</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">Project Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                       name="name" value="{{ old('name') }}" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">Category <span class="text-danger">*</span></label>
+                                <label class="form-label">Kategori <span class="text-danger">*</span></label>
                                 <select class="form-select @error('category_id') is-invalid @enderror" name="category_id" required>
-                                    <option value="">Select Category</option>
+                                    <option value="">Pilih kategori project</option>
                                     @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
@@ -89,47 +81,60 @@
                         </div>
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">Short Description</label>
-                                <textarea class="form-control @error('short_description') is-invalid @enderror" 
-                                          name="short_description" rows="3" 
-                                          placeholder="Brief description (max 500 characters)">{{ old('short_description') }}</textarea>
-                                @error('short_description')
+                                <label class="form-label">Nama Project <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                       name="name" value="{{ old('name') }}" required>
+                                @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">This will be displayed as preview text.</small>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">Full Description</label>
+                                <label class="form-label">Deskripsi Singkat</label>
+                                <textarea class="form-control @error('short_description') is-invalid @enderror" 
+                                          name="short_description" rows="3" 
+                                          placeholder="Deskripsi singkat project (maks 500 karakter)">{{ old('short_description') }}</textarea>
+                                @error('short_description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="form-hint">Deskripsi ini akan ditampilkan sebagai preview text.</small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi Lengkap</label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" 
                                           name="description" id="editor" rows="8" 
-                                          placeholder="Detailed project description...">{{ old('description') }}</textarea>
+                                          placeholder="Deskripsi lengkap project...">{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Provide comprehensive details about the project.</small>
+                                <small class="form-hint">Berikan detail lengkap tentang project ini.</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {{-- SEO Meta --}}
+            @include('components.seo-meta-form', ['data' => 'create', 'type' => 'create'])
         </div>
 
         {{-- Settings --}}
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="ti ti-settings me-2"></i>Settings</h3>
+                    <h3 class="card-title"><i class="ti ti-settings me-2"></i>Pengaturan</h3>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="status" value="1" 
                                    {{ old('status', true) ? 'checked' : '' }}>
-                            <span class="form-check-label">Active</span>
+                            <span class="form-check-label">Aktif</span>
                         </label>
-                        <small class="form-hint">Enable this project to be displayed publicly.</small>
+                        <small class="form-hint">Aktifkan project ini untuk ditampilkan di website.</small>
                     </div>
                 </div>
             </div>
@@ -139,65 +144,65 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="ti ti-photo me-2"></i>Images</h3>
+                    <h3 class="card-title"><i class="ti ti-photo me-2"></i>Gambar</h3>
                     <div class="card-actions">
-                        <small class="text-secondary">All images will be compressed and converted to WebP format</small>
+                        <small class="text-secondary">Semua gambar akan dikompres dan dikonversi ke format WebP</small>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         {{-- Main Image --}}
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="mb-3">
-                                <label class="form-label">Main Image <span class="text-danger">*</span></label>
+                                <label class="form-label">Gambar Utama <span class="text-danger">*</span></label>
                                 <input type="file" class="form-control @error('main_image') is-invalid @enderror" 
                                        name="main_image" accept="image/*" required id="main-image">
                                 @error('main_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Recommended: 1200x800px, Max: 5MB</small>
+                                <small class="form-hint">Rekomendasi: 1200x800px, Maks: 5MB</small>
                                 <div class="mt-2" id="main-image-preview"></div>
                             </div>
                         </div>
 
                         {{-- Banner Image --}}
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="mb-3">
-                                <label class="form-label">Banner Image <span class="text-danger">*</span></label>
+                                <label class="form-label">Gambar Banner <span class="text-danger">*</span></label>
                                 <input type="file" class="form-control @error('banner_image') is-invalid @enderror" 
                                        name="banner_image" accept="image/*" required id="banner-image">
                                 @error('banner_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Recommended: 1920x600px, Max: 5MB</small>
+                                <small class="form-hint">Rekomendasi: 1920x600px, Maks: 5MB</small>
                                 <div class="mt-2" id="banner-image-preview"></div>
                             </div>
                         </div>
 
                         {{-- Logo Image --}}
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="mb-3">
-                                <label class="form-label">Logo Image</label>
+                                <label class="form-label">Logo Project</label>
                                 <input type="file" class="form-control @error('logo_image') is-invalid @enderror" 
                                        name="logo_image" accept="image/*" id="logo-image">
                                 @error('logo_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Recommended: 400x400px, Max: 2MB</small>
+                                <small class="form-hint">Rekomendasi: 400x400px, Maks: 2MB</small>
                                 <div class="mt-2" id="logo-image-preview"></div>
                             </div>
                         </div>
 
                         {{-- Siteplan Image --}}
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="mb-3">
-                                <label class="form-label">Siteplan Image</label>
+                                <label class="form-label">Gambar Siteplan</label>
                                 <input type="file" class="form-control @error('siteplan_image') is-invalid @enderror" 
                                        name="siteplan_image" accept="image/*" id="siteplan-image">
                                 @error('siteplan_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Recommended: 1920x1080px, Max: 5MB</small>
+                                <small class="form-hint">Rekomendasi: 1920x1080px, Maks: 5MB</small>
                                 <div class="mt-2" id="siteplan-image-preview"></div>
                             </div>
                         </div>
@@ -206,24 +211,24 @@
             </div>
         </div>
 
-        {{-- Gallery Images Section - Add after main images section --}}
+        {{-- Gallery Images Section --}}
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="ti ti-library-photo me-2"></i>
-                        Image Gallery
+                        Galeri Project
                     </h3>
                     <div class="card-actions">
                         <span class="badge bg-yellow-lt">
                             <i class="ti ti-info-circle me-1"></i>
-                            Optional
+                            Opsional
                         </span>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Gallery Images</label>
+                        <label class="form-label">Gambar Galeri</label>
                         <input type="file" class="form-control @error('gallery_images.*') is-invalid @enderror" 
                             name="gallery_images[]" accept="image/*" multiple id="gallery-images">
                         @error('gallery_images.*')
@@ -231,7 +236,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Select multiple images for project gallery. Max: 5MB per image
+                            Pilih beberapa gambar untuk galeri project. Maks: 5MB per gambar
                         </small>
                     </div>
                     
@@ -240,24 +245,24 @@
             </div>
         </div>
 
-        {{-- Facility Images Section - Add after Gallery Images Section --}}
+        {{-- Facility Images Section --}}
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="ti ti-building me-2"></i>
-                        Facility Images
+                        Fasilitas Project
                     </h3>
                     <div class="card-actions">
                         <span class="badge bg-yellow-lt">
                             <i class="ti ti-info-circle me-1"></i>
-                            Optional
+                            Opsional
                         </span>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Facility Images</label>
+                        <label class="form-label">Gambar Fasilitas</label>
                         <input type="file" class="form-control @error('facility_images.*') is-invalid @enderror" 
                             name="facility_images[]" accept="image/*" multiple id="facility-images">
                         @error('facility_images.*')
@@ -265,7 +270,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Select multiple images for project facilities. Max: 5MB per image
+                            Pilih beberapa gambar fasilitas project. Maks: 5MB per gambar
                         </small>
                     </div>
                     
@@ -279,9 +284,9 @@
             <div class="card">
                 <div class="card-footer text-end">
                     <div class="d-flex">
-                        <a href="{{ route('development.project.index') }}" class="btn btn-link">Cancel</a>
+                        <a href="{{ route('development.project.index') }}" class="btn btn-link">Batal</a>
                         <button type="submit" class="btn btn-primary ms-auto">
-                            Create Project
+                            Buat Project
                         </button>
                     </div>
                 </div>
@@ -301,53 +306,56 @@
             const input = document.getElementById(inputId);
             const preview = document.getElementById(previewId);
             
-            input.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
+            if (input && preview) {
+                input.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
 
-                    // Check file size
-                    if (file.size > maxFileSize * 1024 * 1024) {
-                        // alert(`File size exceeds the limit of ${maxFileSize} MB.`);
-                        showAlert(input, 'danger', `File size exceeds the limit of ${maxFileSize} MB.`);
-                        input.value = ''; // Clear the file input
-                        return;
-                    }
+                        // Check file size
+                        if (file.size > maxFileSize * 1024 * 1024) {
+                            showAlert(input, 'danger', `Ukuran file melebihi batas ${maxFileSize} MB.`);
+                            input.value = '';
+                            return;
+                        }
 
-                    reader.onload = function(e) {
-                        preview.innerHTML = `
-                            <div class="card" style="max-width: 200px;">
-                                <img src="${e.target.result}" class="card-img-top" style="height: 120px; object-fit: cover;">
-                                <div class="card-body p-2">
-                                    <small class="text-secondary">${file.name}</small><br>
-                                    <small class="text-secondary">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                        reader.onload = function(e) {
+                            preview.innerHTML = `
+                                <div class="card" style="max-width: 200px;">
+                                    <img src="${e.target.result}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                                    <div class="card-body p-2">
+                                        <small class="text-secondary">${file.name}</small><br>
+                                        <small class="text-secondary">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.innerHTML = '';
-                }
-            });
+                            `;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        preview.innerHTML = '';
+                    }
+                });
+            }
         }
 
         // Setup previews for all image inputs
-        setupImagePreview('main-image', 'main-image-preview');
-        setupImagePreview('banner-image', 'banner-image-preview');
+        setupImagePreview('main-image', 'main-image-preview', 5);
+        setupImagePreview('banner-image', 'banner-image-preview', 5);
         setupImagePreview('logo-image', 'logo-image-preview', 2);
-        setupImagePreview('siteplan-image', 'siteplan-image-preview');
+        setupImagePreview('siteplan-image', 'siteplan-image-preview', 5);
 
         // Gallery images handling
         const galleryInput = document.getElementById('gallery-images');
         const galleryPreview = document.getElementById('gallery-preview');
         let galleryFiles = [];
 
-        galleryInput.addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            galleryFiles = files;
-            renderGalleryPreview();
-        });
+        if (galleryInput) {
+            galleryInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                galleryFiles = files;
+                renderGalleryPreview();
+            });
+        }
 
         function renderGalleryPreview() {
             galleryPreview.innerHTML = '';
@@ -360,18 +368,12 @@
                 if (file) {
                     // Validate file
                     if (!file.type.startsWith('image/')) {
-                        showAlert(galleryInput, 'danger', `File ${file.name} is not a valid image`);
-                        galleryInput.value = '';
-                        galleryFiles.splice(index, 1);
-                        renderGalleryPreview();
+                        showAlert(galleryInput, 'danger', `File ${file.name} bukan gambar yang valid`);
                         return;
                     }
                     
                     if (file.size > 5 * 1024 * 1024) {
-                        showAlert(galleryInput, 'danger', `File ${file.name} is too large (max: 5MB)`);
-                        galleryInput.value = '';
-                        galleryFiles.splice(index, 1);
-                        renderGalleryPreview();
+                        showAlert(galleryInput, 'danger', `File ${file.name} terlalu besar (maks: 5MB)`);
                         return;
                     }
 
@@ -387,18 +389,18 @@
                                         <label class="form-label form-label-sm">Alt Text</label>
                                         <input type="text" class="form-control form-control-sm" 
                                             name="gallery_alt_texts[${index}]" 
-                                            placeholder="Describe the image">
+                                            placeholder="Deskripsikan gambar">
                                     </div>
                                     <div class="mb-2">
                                         <label class="form-label form-label-sm">Caption</label>
                                         <textarea class="form-control form-control-sm" rows="2" 
                                                 name="gallery_captions[${index}]" 
-                                                placeholder="Image caption"></textarea>
+                                                placeholder="Caption gambar"></textarea>
                                     </div>
                                     <div class="text-center">
                                         <button type="button" class="btn btn-sm btn-outline-danger" 
                                                 onclick="removeGalleryImage(${index})">
-                                            <i class="ti ti-trash"></i> Remove
+                                            <i class="ti ti-trash"></i> Hapus
                                         </button>
                                     </div>
                                     <small class="text-secondary d-block mt-2">
@@ -408,9 +410,6 @@
                             </div>
                         `;
                         galleryPreview.appendChild(col);
-
-                        // Scroll to the newly added image
-                        col.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     };
                     reader.readAsDataURL(file);
                 }
@@ -453,18 +452,12 @@
                 if (file) {
                     // Validate file
                     if (!file.type.startsWith('image/')) {
-                        showAlert(facilityInput, 'danger', `File ${file.name} is not a valid image`);
-                        facilityInput.value = '';
-                        facilityFiles.splice(index, 1);
-                        renderFacilityPreview();
+                        showAlert(facilityInput, 'danger', `File ${file.name} bukan gambar yang valid`);
                         return;
                     }
                     
                     if (file.size > 5 * 1024 * 1024) {
-                        showAlert(facilityInput, 'danger', `File ${file.name} is too large (max: 5MB)`);
-                        facilityInput.value = '';
-                        facilityFiles.splice(index, 1);
-                        renderFacilityPreview();
+                        showAlert(facilityInput, 'danger', `File ${file.name} terlalu besar (maks: 5MB)`);
                         return;
                     }
 
@@ -473,31 +466,31 @@
                         const col = document.createElement('div');
                         col.className = 'col-md-4';
                         col.innerHTML = `
-                            <div class="card facility-item">
+                            <div class="card gallery-item">
                                 <img src="${e.target.result}" class="card-img-top" style="height: 200px; object-fit: cover;">
                                 <div class="card-body p-3">
                                     <div class="mb-2">
-                                        <label class="form-label form-label-sm">Facility Title <span class="text-danger">*</span></label>
+                                        <label class="form-label form-label-sm">Nama Fasilitas</label>
                                         <input type="text" class="form-control form-control-sm" 
                                             name="facility_titles[${index}]" 
-                                            placeholder="Enter facility name" required>
+                                            placeholder="Nama fasilitas">
                                     </div>
                                     <div class="mb-2">
-                                        <label class="form-label form-label-sm">Description</label>
+                                        <label class="form-label form-label-sm">Deskripsi</label>
                                         <textarea class="form-control form-control-sm" rows="2" 
                                                 name="facility_descriptions[${index}]" 
-                                                placeholder="Facility description"></textarea>
+                                                placeholder="Deskripsi fasilitas"></textarea>
                                     </div>
                                     <div class="mb-2">
                                         <label class="form-label form-label-sm">Alt Text</label>
                                         <input type="text" class="form-control form-control-sm" 
                                             name="facility_alt_texts[${index}]" 
-                                            placeholder="Image description for accessibility">
+                                            placeholder="Alt text untuk SEO">
                                     </div>
                                     <div class="text-center">
                                         <button type="button" class="btn btn-sm btn-outline-danger" 
                                                 onclick="removeFacilityImage(${index})">
-                                            <i class="ti ti-trash"></i> Remove
+                                            <i class="ti ti-trash"></i> Hapus
                                         </button>
                                     </div>
                                     <small class="text-secondary d-block mt-2">
@@ -507,9 +500,6 @@
                             </div>
                         `;
                         facilityPreview.appendChild(col);
-
-                        // Scroll to the newly added image
-                        col.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     };
                     reader.readAsDataURL(file);
                 }
@@ -534,7 +524,7 @@
         
         form.addEventListener('submit', function() {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Membuat Project...';
         });
     });
 </script>

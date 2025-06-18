@@ -95,6 +95,8 @@
                     </div>
                 </div>
             </div>
+
+            @include('components.seo-meta-form', ['data' => 'create', 'type' => 'create'])
         </div>
 
         {{-- Sidebar --}}

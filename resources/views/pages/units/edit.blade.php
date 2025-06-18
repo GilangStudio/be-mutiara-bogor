@@ -158,6 +158,9 @@
                 </div>
             </div>
 
+            {{-- SEO Meta --}}
+            @include('components.seo-meta-form', ['data' => $unit, 'type' => 'edit'])
+
             {{-- Unit Specifications --}}
             <div class="card mt-3">
                 <div class="card-header">

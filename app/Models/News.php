@@ -31,6 +31,22 @@ class News extends Model
         return Str::limit(strip_tags($this->content), 100);
     }
 
+    // Meta SEO Accessors
+    public function getMetaTitleDisplayAttribute()
+    {
+        return $this->meta_title ?: $this->title;
+    }
+
+    public function getMetaDescriptionDisplayAttribute()
+    {
+        return $this->meta_description ?: $this->excerpt;
+    }
+
+    public function getMetaKeywordsDisplayAttribute()
+    {
+        return $this->meta_keywords ?: '';
+    }
+
     // Scopes
     public function scopePublished($query)
     {

@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->longText('content');
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('meta_keywords')->nullable();
             $table->string('image_path')->nullable();
             $table->enum('status', ['draft', 'published'])->default('draft');
             $table->string('author')->nullable();
