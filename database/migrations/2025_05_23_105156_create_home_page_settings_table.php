@@ -23,6 +23,11 @@ return new class extends Migration
             // Hero Section
             $table->string('hero_title');
             $table->text('hero_description');
+
+            // SEO
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('meta_keywords')->nullable();
             
             // About Development Section
             $table->string('about_section_title')->default('About The Development');

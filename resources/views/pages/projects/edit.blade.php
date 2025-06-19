@@ -236,6 +236,67 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
+                            <div class="row">
+                                {{-- Banner Type Selection --}}
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label class="form-label">
+                                            Banner Type 
+                                            @if(!$project->banner_url && !$project->banner_video_url)
+                                            <span class="text-danger">*</span>
+                                            @endif
+                                        </label>
+                                        <select class="form-select @error('banner_type') is-invalid @enderror" 
+                                                name="banner_type" id="banner-type-select" required>
+                                            <option value="image" {{ old('banner_type', $project->banner_type) == 'image' ? 'selected' : '' }}>
+                                                Gambar
+                                            </option>
+                                            <option value="video" {{ old('banner_type', $project->banner_type) == 'video' ? 'selected' : '' }}>
+                                                Video
+                                            </option>
+                                        </select>
+                                        @error('banner_type')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Banner Image Input --}}
+                                <div class="col-md-6" id="banner-image-section">
+                                    <div class="mb-4">
+                                        <label class="form-label">Banner Image</label>
+                                        <input type="file" class="form-control @error('banner_image') is-invalid @enderror" 
+                                            name="banner_image" accept="image/*" id="banner-image">
+                                        @error('banner_image')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-hint">
+                                            <i class="ti ti-info-circle me-1"></i>
+                                            Recommended: 1920x600px, Max: 5MB
+                                        </small>
+                                        <div class="mt-2" id="banner-image-preview"></div>
+                                    </div>
+                                </div>
+
+                                {{-- Banner Video Input --}}
+                                <div class="col-md-6" id="banner-video-section" style="display: none;">
+                                    <div class="mb-4">
+                                        <label class="form-label">Banner Video</label>
+                                        <input type="file" class="form-control @error('banner_video') is-invalid @enderror" 
+                                            name="banner_video" accept="video/*" id="banner-video">
+                                        @error('banner_video')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-hint">
+                                            <i class="ti ti-info-circle me-1"></i>
+                                            Format: MP4, MOV, AVI. Max: 50MB
+                                        </small>
+                                        <div class="mt-2" id="banner-video-preview"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">Project Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" 
@@ -354,14 +415,22 @@
                         </div>
                         @endif
 
-                        @if($project->banner_url)
+                        @if($project->banner_url || $project->banner_video_url)
                         <div class="col-6">
                             <div class="card border">
-                                <img src="{{ $project->banner_url }}" class="card-img-top" style="height: 100px; object-fit: cover;">
+                                @if($project->banner_type === 'image' && $project->banner_url)
+                                    <img src="{{ $project->banner_url }}" class="card-img-top" style="height: 100px; object-fit: cover;">
+                                @elseif($project->banner_type === 'video' && $project->banner_video_url)
+                                    <video class="card-img-top" style="height: 100px; object-fit: cover;" muted>
+                                        <source src="{{ $project->banner_video_url }}" type="video/mp4">
+                                    </video>
+                                @endif
                                 <div class="card-body p-2">
-                                    <small class="text-secondary fw-medium">Banner</small>
+                                    <small class="text-secondary fw-medium">
+                                        Banner {{ $project->banner_type === 'video' ? '(Video)' : '(Image)' }}
+                                    </small>
                                     <br>
-                                    <a href="{{ $project->banner_url }}" target="_blank" class="btn btn-sm btn-outline-primary mt-1">
+                                    <a href="{{ $project->banner_media_url }}" target="_blank" class="btn btn-sm btn-outline-primary mt-1">
                                         <i class="ti ti-external-link"></i> View
                                     </a>
                                 </div>
@@ -470,7 +539,7 @@
 
                     <div class="row">
                         {{-- Main Image --}}
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-4">
                                 <label class="form-label">
                                     Main Image 
@@ -491,30 +560,8 @@
                             </div>
                         </div>
 
-                        {{-- Banner Image --}}
-                        <div class="col-md-6">
-                            <div class="mb-4">
-                                <label class="form-label">
-                                    Banner Image 
-                                    @if(!$project->banner_url)
-                                    <span class="text-danger">*</span>
-                                    @endif
-                                </label>
-                                <input type="file" class="form-control @error('banner_image') is-invalid @enderror" 
-                                       name="banner_image" accept="image/*" id="banner-image">
-                                @error('banner_image')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <small class="form-hint">
-                                    <i class="ti ti-info-circle me-1"></i>
-                                    Recommended: 1920x600px, Max: 5MB
-                                </small>
-                                <div class="mt-2" id="banner-image-preview"></div>
-                            </div>
-                        </div>
-
                         {{-- Logo Image --}}
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-4">
                                 <label class="form-label">Logo Image <span class="text-secondary">(Optional)</span></label>
                                 <input type="file" class="form-control @error('logo_image') is-invalid @enderror" 
@@ -531,7 +578,7 @@
                         </div>
 
                         {{-- Siteplan Image --}}
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-4">
                                 <label class="form-label">Siteplan Image <span class="text-secondary">(Optional)</span></label>
                                 <input type="file" class="form-control @error('siteplan_image') is-invalid @enderror" 
@@ -836,6 +883,39 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const bannerTypeSelect = document.getElementById('banner-type-select');
+        const bannerImageSection = document.getElementById('banner-image-section');
+        const bannerVideoSection = document.getElementById('banner-video-section');
+        const bannerImageInput = document.getElementById('banner-image');
+        const bannerVideoInput = document.getElementById('banner-video');
+
+        if (bannerTypeSelect) {
+            bannerTypeSelect.addEventListener('change', function() {
+                const selectedType = this.value;
+                
+                if (selectedType === 'image') {
+                    bannerImageSection.style.display = 'block';
+                    bannerVideoSection.style.display = 'none';
+                    // Clear video input when switching to image
+                    if (bannerVideoInput) {
+                        bannerVideoInput.value = '';
+                        document.getElementById('banner-video-preview').innerHTML = '';
+                    }
+                } else if (selectedType === 'video') {
+                    bannerImageSection.style.display = 'none';
+                    bannerVideoSection.style.display = 'block';
+                    // Clear image input when switching to video
+                    if (bannerImageInput) {
+                        bannerImageInput.value = '';
+                        document.getElementById('banner-image-preview').innerHTML = '';
+                    }
+                }
+            });
+            
+            // Trigger change event on page load untuk set initial state
+            bannerTypeSelect.dispatchEvent(new Event('change'));
+        }
+
         const shortDescTextarea = document.querySelector('textarea[name="short_description"]');
         const charCount = document.getElementById('short-desc-count');
         
@@ -910,6 +990,63 @@
             });
         }
 
+        function setupVideoPreview(inputId, previewId, maxFileSize = 50) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            if (input && preview) {
+                input.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Validate file size
+                        if (file.size > maxFileSize * 1024 * 1024) {
+                            showAlert(input, 'danger', `Ukuran file terlalu besar. Maksimum ${maxFileSize}MB diperbolehkan.`);
+                            input.value = '';
+                            return;
+                        }
+
+                        // Validate file type
+                        if (!file.type.startsWith('video/')) {
+                            showAlert(input, 'danger', 'Silakan pilih file video yang valid.');
+                            input.value = '';
+                            return;
+                        }
+
+                        const url = URL.createObjectURL(file);
+                        preview.innerHTML = `
+                            <div class="card image-preview-card">
+                                <video controls class="card-img-top" style="height: 150px; object-fit: cover;">
+                                    <source src="${url}" type="${file.type}">
+                                    Browser Anda tidak mendukung video HTML5.
+                                </video>
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h5 class="card-title h6 mb-1">${file.name}</h5>
+                                            <small class="text-secondary">
+                                                ${(file.size / 1024 / 1024).toFixed(2)} MB
+                                            </small>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearPreview('${inputId}', '${previewId}')">
+                                            <i class="ti ti-x"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mt-2">
+                                        <small class="text-success">
+                                            <i class="ti ti-check me-1"></i>
+                                            Siap untuk diupload
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        preview.innerHTML = '';
+                    }
+                });
+            }
+        }
+
         // Clear preview function
         window.clearPreview = function(inputId, previewId) {
             document.getElementById(inputId).value = '';
@@ -921,6 +1058,9 @@
         setupImagePreview('banner-image', 'banner-image-preview');
         setupImagePreview('logo-image', 'logo-image-preview');
         setupImagePreview('siteplan-image', 'siteplan-image-preview');
+
+        // Setup banner video preview
+        setupVideoPreview('banner-video', 'banner-video-preview', 50);
 
         // Gallery images handling for new uploads
         const galleryInput = document.getElementById('gallery-images');

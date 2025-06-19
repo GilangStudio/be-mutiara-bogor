@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Create Facility')
+@section('title', 'Create Accessibility')
 
 @push('styles')
 <style>
@@ -33,9 +33,9 @@
 
 @section('header')
 <div class="d-flex justify-content-between align-items-center">
-    <h2 class="page-title">Create New Facility</h2>
-    <a href="{{ route('facilities.index') }}" class="btn btn-outline-secondary">
-        <i class="ti ti-arrow-left me-1"></i> Back to Facilities
+    <h2 class="page-title">Create New Accessibility</h2>
+    <a href="{{ route('accessibilities.index') }}" class="btn btn-outline-secondary">
+        <i class="ti ti-arrow-left me-1"></i> Back to Accessibilities
     </a>
 </div>
 @endsection
@@ -54,23 +54,23 @@
 </div>
 @endif
 
-<form action="{{ route('facilities.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('accessibilities.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="row g-3">
         {{-- Main Content --}}
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="ti ti-building me-2"></i>Facility Information</h3>
+                    <h3 class="card-title"><i class="ti ti-building me-2"></i>Accessibility Information</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">Facility Name <span class="text-danger">*</span></label>
+                                <label class="form-label">Accessibility Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" 
                                        name="name" value="{{ old('name') }}" autocomplete="off" required
-                                       placeholder="Enter facility name">
+                                       placeholder="Enter accessibility name">
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -84,11 +84,11 @@
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" 
                                           name="description" rows="6" 
-                                          placeholder="Describe the facility and its features...">{{ old('description') }}</textarea>
+                                          placeholder="Describe the accessibility and its features...">{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Provide details about this facility and what it offers.</small>
+                                <small class="form-hint">Provide details about this accessibility and what it offers.</small>
                             </div>
                         </div>
                     </div>
@@ -110,15 +110,15 @@
                                    {{ old('status', true) ? 'checked' : '' }}>
                             <span class="form-check-label">Active Status</span>
                         </label>
-                        <small class="form-hint">Enable this facility to be displayed publicly.</small>
+                        <small class="form-hint">Enable this accessibility to be displayed publicly.</small>
                     </div>
                 </div>
             </div>
 
-            {{-- Facility Image --}}
+            {{-- Accessibility Image --}}
             <div class="card mt-3">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="ti ti-photo me-2"></i>Facility Image</h3>
+                    <h3 class="card-title"><i class="ti ti-photo me-2"></i>Accessibility Image</h3>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -143,10 +143,10 @@
             <div class="card">
                 <div class="card-footer text-end">
                     <div class="d-flex">
-                        <a href="{{ route('facilities.index') }}" class="btn btn-link">Cancel</a>
+                        <a href="{{ route('accessibilities.index') }}" class="btn btn-link">Cancel</a>
                         <button type="submit" class="btn btn-primary ms-auto" id="submit-btn">
                             <i class="ti ti-device-floppy me-1"></i>
-                            Create Facility
+                            Create Accessibility
                         </button>
                     </div>
                 </div>

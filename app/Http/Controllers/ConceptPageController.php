@@ -29,19 +29,23 @@ class ConceptPageController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
-            'meta_description' => 'nullable|string|max:500',
             'description' => 'required|string',
             'banner_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
             'banner_alt_text' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string|max:255',
         ], [
             'title.required' => 'Title is required',
             'title.max' => 'Title cannot exceed 255 characters',
-            'meta_description.max' => 'Meta description cannot exceed 500 characters',
             'description.required' => 'Description is required',
             'banner_image.required' => 'Banner image is required',
             'banner_image.image' => 'Banner must be an image file',
             'banner_image.max' => 'Banner image size cannot exceed 5MB',
             'banner_alt_text.max' => 'Banner alt text cannot exceed 255 characters',
+            'meta_title.max' => 'Meta title cannot exceed 255 characters',
+            'meta_description.max' => 'Meta description cannot exceed 500 characters',
+            'meta_keywords.max' => 'Meta keywords cannot exceed 255 characters',
         ]);
 
         try {
@@ -55,10 +59,12 @@ class ConceptPageController extends Controller
 
             ConceptPage::create([
                 'title' => $request->title,
-                'meta_description' => $request->meta_description,
                 'description' => $request->description,
                 'banner_image_path' => $bannerPath,
                 'banner_alt_text' => $request->banner_alt_text,
+                'meta_title' => $request->meta_title,
+                'meta_description' => $request->meta_description,
+                'meta_keywords' => $request->meta_keywords
             ]);
 
             return redirect()->route('concept.index')
@@ -82,10 +88,12 @@ class ConceptPageController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
-            'meta_description' => 'nullable|string|max:500',
             'description' => 'required|string',
             'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'banner_alt_text' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string|max:255',
         ], [
             'title.required' => 'Title is required',
             'title.max' => 'Title cannot exceed 255 characters',
@@ -94,6 +102,9 @@ class ConceptPageController extends Controller
             'banner_image.image' => 'Banner must be an image file',
             'banner_image.max' => 'Banner image size cannot exceed 5MB',
             'banner_alt_text.max' => 'Banner alt text cannot exceed 255 characters',
+           'meta_title.max' => 'Meta title cannot exceed 255 characters',
+           'meta_description.max' => 'Meta description cannot exceed 500 characters',
+           'meta_keywords.max' => 'Meta keywords cannot exceed 255 characters',
         ]);
 
         try {
@@ -108,10 +119,12 @@ class ConceptPageController extends Controller
 
             $conceptPage->update([
                 'title' => $request->title,
-                'meta_description' => $request->meta_description,
                 'description' => $request->description,
                 'banner_image_path' => $bannerPath,
                 'banner_alt_text' => $request->banner_alt_text,
+                'meta_title' => $request->meta_title,
+                'meta_description' => $request->meta_description,
+                'meta_keywords' => $request->meta_keywords
             ]);
 
             return redirect()->route('concept.index')

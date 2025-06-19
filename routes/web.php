@@ -10,6 +10,7 @@ use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\ConceptPageController;
 use App\Http\Controllers\HomeFeatureController;
+use App\Http\Controllers\AccessibilityController;
 use App\Http\Controllers\CompanyProfileController;
 use App\Http\Controllers\ProjectCategoryController;
 use App\Http\Controllers\HomeFeaturedUnitController;
@@ -108,14 +109,14 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('accessibility')->name('facilities.')->group(function () {
-        Route::get('/', [FacilityController::class, 'index'])->name('index');
-        Route::get('/create', [FacilityController::class, 'create'])->name('create');
-        Route::post('/', [FacilityController::class, 'store'])->name('store');
-        Route::get('/{facility}/edit', [FacilityController::class, 'edit'])->name('edit');
-        Route::put('/{facility}', [FacilityController::class, 'update'])->name('update');
-        Route::delete('/{facility}', [FacilityController::class, 'destroy'])->name('destroy');
-        Route::post('/reorder', [FacilityController::class, 'reorder'])->name('reorder');
+    Route::prefix('accessibility')->name('accessibilities.')->group(function () {
+        Route::get('/', [AccessibilityController::class, 'index'])->name('index');
+        Route::get('/create', [AccessibilityController::class, 'create'])->name('create');
+        Route::post('/', [AccessibilityController::class, 'store'])->name('store');
+        Route::get('/{accessibility}/edit', [AccessibilityController::class, 'edit'])->name('edit');
+        Route::put('/{accessibility}', [AccessibilityController::class, 'update'])->name('update');
+        Route::delete('/{accessibility}', [AccessibilityController::class, 'destroy'])->name('destroy');
+        Route::post('/reorder', [AccessibilityController::class, 'reorder'])->name('reorder');
     });
 
     // FAQ Routes

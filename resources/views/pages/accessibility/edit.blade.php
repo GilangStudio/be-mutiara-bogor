@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Edit Facility')
+@section('title', 'Edit Accessibility')
 
 @push('styles')
 <style>
@@ -47,11 +47,11 @@
 @section('header')
 <div class="d-flex justify-content-between align-items-center">
     <div>
-        <h2 class="page-title">Edit Facility</h2>
-        <div class="page-subtitle">{{ $facility->name }}</div>
+        <h2 class="page-title">Edit Accessibility</h2>
+        <div class="page-subtitle">{{ $accessibility->name }}</div>
     </div>
-    <a href="{{ route('facilities.index') }}" class="btn btn-outline-secondary">
-        <i class="ti ti-arrow-left me-1"></i> Back to Facilities
+    <a href="{{ route('accessibilities.index') }}" class="btn btn-outline-secondary">
+        <i class="ti ti-arrow-left me-1"></i> Back to Accessibility
     </a>
 </div>
 @endsection
@@ -75,7 +75,7 @@
 </div>
 @endif
 
-<form action="{{ route('facilities.update', $facility) }}" method="POST" enctype="multipart/form-data" id="edit-form">
+<form action="{{ route('accessibilities.update', $accessibility) }}" method="POST" enctype="multipart/form-data" id="edit-form">
     @csrf
     @method('PUT')
     <div class="row g-3">
@@ -85,22 +85,22 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="ti ti-building me-2"></i>
-                        Facility Information
+                        Accessibility Information
                     </h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">Facility Name <span class="text-danger">*</span></label>
+                                <label class="form-label">Accessibility Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                       name="name" value="{{ old('name', $facility->name) }}" autocomplete="off" required 
-                                       placeholder="Enter facility name">
+                                       name="name" value="{{ old('name', $accessibility->name) }}" autocomplete="off" required 
+                                       placeholder="Enter accessibility name">
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 <small class="form-hint">
-                                    <span id="name-count">{{ strlen($facility->name ?? '') }}</span>/255 characters
+                                    <span id="name-count">{{ strlen($accessibility->name ?? '') }}</span>/255 characters
                                 </small>
                             </div>
                         </div>
@@ -109,11 +109,11 @@
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" 
                                           name="description" rows="6" 
-                                          placeholder="Describe the facility and its features...">{{ old('description', $facility->description) }}</textarea>
+                                          placeholder="Describe the accessibility and its features...">{{ old('description', $accessibility->description) }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Provide details about this facility and what it offers.</small>
+                                <small class="form-hint">Provide details about this accessibility and what it offers.</small>
                             </div>
                         </div>
                     </div>
@@ -135,25 +135,25 @@
                     <div class="mb-3">
                         <label class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="status" value="1" 
-                                   {{ old('status', $facility->is_active) ? 'checked' : '' }}>
+                                   {{ old('status', $accessibility->is_active) ? 'checked' : '' }}>
                             <span class="form-check-label">Active Status</span>
                         </label>
-                        <small class="form-hint">Enable this facility to be displayed publicly.</small>
+                        <small class="form-hint">Enable this accessibility to be displayed publicly.</small>
                     </div>
                     
                     <div class="mb-0">
                         <label class="form-label text-secondary">Order Position</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light">#</span>
-                            <input type="text" class="form-control bg-light" value="{{ $facility->order }}" readonly>
+                            <input type="text" class="form-control bg-light" value="{{ $accessibility->order }}" readonly>
                         </div>
-                        <small class="form-hint">Order position in the facilities list.</small>
+                        <small class="form-hint">Order position in the accessibilities list.</small>
                     </div>
                 </div>
             </div>
 
             {{-- Current Image --}}
-            @if($facility->image_url)
+            @if($accessibility->image_url)
             <div class="card mt-3">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -163,11 +163,11 @@
                 </div>
                 <div class="card-body">
                     <div class="card border">
-                        <img src="{{ $facility->image_url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                        <img src="{{ $accessibility->image_url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
                         <div class="card-body p-2">
                             <div class="d-flex justify-content-between">
-                                <small class="text-secondary fw-medium">Facility Image</small>
-                                <a href="{{ $facility->image_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <small class="text-secondary fw-medium">Accessibility Image</small>
+                                <a href="{{ $accessibility->image_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                     <i class="ti ti-external-link"></i> View
                                 </a>
                             </div>
@@ -182,12 +182,12 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="ti ti-upload me-2"></i>
-                        {{ $facility->image_url ? 'Update Image' : 'Add Image' }}
+                        {{ $accessibility->image_url ? 'Update Image' : 'Add Image' }}
                     </h3>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Image {{ !$facility->image_url ? '<span class="text-danger">*</span>' : '' }}</label>
+                        <label class="form-label">Image {{ !$accessibility->image_url ? '<span class="text-danger">*</span>' : '' }}</label>
                         <input type="file" class="form-control @error('image') is-invalid @enderror" 
                                name="image" accept="image/*" id="image-input">
                         @error('image')
@@ -195,19 +195,19 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            {{ $facility->image_url ? 'Leave empty to keep current image.' : '' }} Recommended: 1200x800px, Max: 5MB
+                            {{ $accessibility->image_url ? 'Leave empty to keep current image.' : '' }} Recommended: 1200x800px, Max: 5MB
                         </small>
                         <div class="mt-2" id="image-preview"></div>
                     </div>
                 </div>
             </div>
 
-            {{-- Facility Meta --}}
+            {{-- Accessibility Meta --}}
             <div class="card mt-3">
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="ti ti-info-square me-2"></i>
-                        Facility Meta
+                        Accessibility Meta
                     </h3>
                 </div>
                 <div class="card-body">
@@ -215,13 +215,13 @@
                         <div class="col-12">
                             <div class="mb-2">
                                 <small class="text-secondary">Created:</small>
-                                <div>{{ $facility->created_at->format('d M Y, H:i') }}</div>
+                                <div>{{ $accessibility->created_at->format('d M Y, H:i') }}</div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="mb-0">
                                 <small class="text-secondary">Last Updated:</small>
-                                <div>{{ $facility->updated_at->format('d M Y, H:i') }}</div>
+                                <div>{{ $accessibility->updated_at->format('d M Y, H:i') }}</div>
                             </div>
                         </div>
                     </div>
@@ -237,16 +237,16 @@
                         <div>
                             <small class="text-secondary">
                                 <i class="ti ti-clock me-1"></i>
-                                Last saved: {{ $facility->updated_at->format('d M Y, H:i') }}
+                                Last saved: {{ $accessibility->updated_at->format('d M Y, H:i') }}
                             </small>
                         </div>
                         <div class="btn-list">
-                            <a href="{{ route('facilities.index') }}" class="btn btn-link">
+                            <a href="{{ route('accessibilities.index') }}" class="btn btn-link">
                                 Cancel
                             </a>
                             <button type="submit" class="btn btn-primary" id="submit-btn">
                                 <i class="ti ti-device-floppy me-1"></i> 
-                                Update Facility
+                                Update Accessibility
                             </button>
                         </div>
                     </div>
@@ -360,7 +360,7 @@
         form.addEventListener('submit', function(e) {
             // Add loading state
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Updating Facility...';
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Updating Accessibility...';
             
             // Add loading class to form
             form.classList.add('loading');

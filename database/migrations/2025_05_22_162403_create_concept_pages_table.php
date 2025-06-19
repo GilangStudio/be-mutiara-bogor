@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('concept_pages', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description')->nullable();
             $table->string('banner_image_path');
             $table->string('banner_alt_text')->nullable();
             $table->longText('description');
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('meta_keywords')->nullable();
             $table->timestamps();
         });
     }

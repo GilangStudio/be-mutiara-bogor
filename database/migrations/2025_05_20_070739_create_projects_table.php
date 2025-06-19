@@ -22,7 +22,9 @@ return new class extends Migration
             $table->text('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->string('main_image_path');
-            $table->string('banner_path');
+            $table->string('banner_path')->nullable();
+            $table->string('banner_type')->default('image');
+            $table->string('banner_video_path')->nullable();
             $table->string('logo_path')->nullable();
             $table->string('siteplan_image_path')->nullable();
             $table->integer('order')->default(0);

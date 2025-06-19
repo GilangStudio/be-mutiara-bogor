@@ -20,14 +20,13 @@
                     <label class="form-label">Meta Title</label>
                     <input type="text" class="form-control @error('meta_title') is-invalid @enderror" 
                            name="meta_title" value="{{ old('meta_title') }}" 
-                           placeholder="Judul yang akan muncul di hasil pencarian Google"
+                           placeholder="Enter title that will appear in search results"
                            maxlength="255" id="meta-title-input">
                     @error('meta_title')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <small class="form-hint">
-                        <span id="meta-title-count">0</span>/255 karakter. 
-                        Jika kosong, akan menggunakan nama project.
+                        <span id="meta-title-count">0</span>/255 characters. 
                     </small>
                 </div>
             </div>
@@ -36,14 +35,13 @@
                     <label class="form-label">Meta Description</label>
                     <textarea class="form-control @error('meta_description') is-invalid @enderror" 
                               name="meta_description" rows="3" 
-                              placeholder="Deskripsi yang akan muncul di hasil pencarian Google"
+                              placeholder="Enter description that will appear in search results"
                               maxlength="500" id="meta-desc-input">{{ old('meta_description') }}</textarea>
                     @error('meta_description')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <small class="form-hint">
-                        <span id="meta-desc-count">0</span>/500 karakter. 
-                        Jika kosong, akan menggunakan deskripsi singkat.
+                        <span id="meta-desc-count">0</span>/500 characters. 
                     </small>
                 </div>
             </div>
@@ -52,14 +50,13 @@
                     <label class="form-label">Meta Keywords</label>
                     <input type="text" class="form-control @error('meta_keywords') is-invalid @enderror" 
                            name="meta_keywords" value="{{ old('meta_keywords') }}" 
-                           placeholder="kata kunci, properti, perumahan, Jakarta"
+                           placeholder="keywords separated by commas. e.g: property, house, Jakarta, residence"
                            maxlength="255" id="meta-keywords-input">
                     @error('meta_keywords')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <small class="form-hint">
-                        <span id="meta-keywords-count">0</span>/255 karakter. 
-                        Pisahkan dengan koma. Contoh: properti, perumahan, Jakarta
+                        <span id="meta-keywords-count">0</span>/255 characters. 
                     </small>
                 </div>
             </div>
@@ -87,8 +84,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <small class="form-hint">
-                        <span id="meta-title-count">{{ strlen($data->meta_title ?? '') }}</span>/255 karakter. 
-                        Jika kosong, akan menggunakan nama project.
+                        <span id="meta-title-count">{{ strlen($data->meta_title ?? '') }}</span>/255 characters. 
                     </small>
                 </div>
             </div>
@@ -103,8 +99,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <small class="form-hint">
-                        <span id="meta-desc-count">{{ strlen($data->meta_description ?? '') }}</span>/500 karakter. 
-                        Jika kosong, akan menggunakan deskripsi singkat.
+                        <span id="meta-desc-count">{{ strlen($data->meta_description ?? '') }}</span>/500 characters. 
                     </small>
                 </div>
             </div>
@@ -119,8 +114,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <small class="form-hint">
-                        <span id="meta-keywords-count">{{ strlen($data->meta_keywords ?? '') }}</span>/255 karakter. 
-                        Pisahkan dengan koma. Contoh: properti, perumahan, Jakarta
+                        <span id="meta-keywords-count">{{ strlen($data->meta_keywords ?? '') }}</span>/255 characters. 
                     </small>
                 </div>
             </div>

@@ -38,6 +38,21 @@ class HomePageSetting extends Model
         return $this->location_image_path ? asset('storage/' . $this->location_image_path) : null;
     }
 
+    public function getMetaTitleDisplayAttribute()
+    {
+        return $this->meta_title ?: '';
+    }
+
+    public function getMetaDescriptionDisplayAttribute()
+    {
+        return $this->meta_description ?: '';
+    }
+
+    public function getMetaKeywordsDisplayAttribute()
+    {
+        return $this->meta_keywords ?: '';
+    }
+
     // Scopes
     public function scopeActive($query)
     {

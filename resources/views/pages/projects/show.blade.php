@@ -180,7 +180,7 @@
         </div>
 
         {{-- Main Image & Banner --}}
-        @if($project->main_image_url || $project->banner_url)
+        @if($project->main_image_url || $project->banner_url || $project->banner_video_url)
         <div class="card mt-3">
             <div class="card-header">
                 <h3 class="card-title">Main Images</h3>
@@ -206,16 +206,27 @@
                     </div>
                     @endif
 
-                    @if($project->banner_url)
+                    @if($project->banner_url || $project->banner_video_url)
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label text-secondary">Banner Image</label>
+                            <label class="form-label text-secondary">
+                                Banner {{ $project->banner_type === 'video' ? '(Video)' : '(Image)' }}
+                            </label>
                             <div class="card">
-                                <img src="{{ $project->banner_url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                                @if($project->banner_type === 'image' && $project->banner_url)
+                                    <img src="{{ $project->banner_url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                                @elseif($project->banner_type === 'video' && $project->banner_video_url)
+                                    <video controls class="card-img-top" style="height: 200px; object-fit: cover;">
+                                        <source src="{{ $project->banner_video_url }}" type="video/mp4">
+                                        Your browser does not support HTML5 video.
+                                    </video>
+                                @endif
                                 <div class="card-body p-2">
                                     <div class="d-flex justify-content-between">
-                                        <small class="text-secondary">Banner Image</small>
-                                        <a href="{{ $project->banner_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <small class="text-secondary">
+                                            Banner {{ $project->banner_type === 'video' ? 'Video' : 'Image' }}
+                                        </small>
+                                        <a href="{{ $project->banner_media_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                             <i class="ti ti-external-link"></i> View Full
                                         </a>
                                     </div>
@@ -472,10 +483,10 @@
             </div>
         </div>
 
-        {{-- Images Info --}}
+        {{-- Media Info --}}
         <div class="card mt-3">
             <div class="card-header">
-                <h3 class="card-title">Images Info</h3>
+                <h3 class="card-title">Media Info</h3>
             </div>
             <div class="card-body">
                 <div class="list-group list-group-flush">
@@ -486,9 +497,9 @@
                         </span>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span>Banner</span>
-                        <span class="badge bg-{{ $project->banner_path ? 'green' : 'red' }}-lt">
-                            {{ $project->banner_path ? 'Available' : 'Missing' }}
+                        <span>Banner  {{ $project->banner_type === 'video' ? 'Video' : 'Image' }}</span>
+                        <span class="badge bg-{{ ($project->banner_path || $project->banner_video_path) ? 'green' : 'red' }}-lt">
+                            {{ ($project->banner_path || $project->banner_video_path) ? 'Available' : 'Missing' }}
                         </span>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0">

@@ -119,7 +119,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Bedrooms</label>
                                 <input type="number" class="form-control @error('bedrooms') is-invalid @enderror" 
@@ -129,7 +129,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Bathrooms</label>
                                 <input type="number" class="form-control @error('bathrooms') is-invalid @enderror" 
@@ -139,7 +139,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Carports</label>
                                 <input type="number" class="form-control @error('carports') is-invalid @enderror" 
@@ -486,7 +486,7 @@
                                value="${value}">
                     </div>
                     <div class="col-md-2">
-                        <button type="button" class="btn btn-sm btn-outline-danger w-100" 
+                        <button type="button" class="btn btn-outline-danger" 
                                 onclick="removeSpecRow(this)">
                             <i class="ti ti-trash"></i>
                         </button>

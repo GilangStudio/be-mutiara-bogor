@@ -68,7 +68,7 @@ class Unit extends Model
 
     public function getMetaDescriptionDisplayAttribute()
     {
-        return $this->meta_description ?: $this->excerpt;
+        return $this->meta_description ?: '';
     }
 
     public function getMetaKeywordsDisplayAttribute()

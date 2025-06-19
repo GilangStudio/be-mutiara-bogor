@@ -198,20 +198,6 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Meta Description</label>
-                                        <textarea class="form-control @error('meta_description') is-invalid @enderror" 
-                                                  name="meta_description" rows="3" maxlength="500"
-                                                  placeholder="SEO meta description for search engines...">{{ old('meta_description', $conceptPage->meta_description ?? '') }}</textarea>
-                                        @error('meta_description')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <small class="form-hint">
-                                            <span id="meta-count">{{ strlen($conceptPage->meta_description ?? '') }}</span>/500 characters. Used for SEO.
-                                        </small>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="mb-3">
                                         <label class="form-label">Description <span class="text-danger">*</span></label>
                                         <textarea class="form-control @error('description') is-invalid @enderror" 
                                                   name="description" id="editor" rows="8"
@@ -221,6 +207,54 @@
                                         @enderror
                                         <div class="invalid-feedback" id="description-error" style="display: none;"></div>
                                         <small class="form-hint">This content will be displayed below the banner image.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Meta Title</label>
+                                        <input type="text" class="form-control @error('meta_title') is-invalid @enderror" 
+                                               name="meta_title" value="{{ old('meta_title', $conceptPage->meta_title) }}" 
+                                               placeholder="Enter title that will appear in search results"
+                                               maxlength="255" id="meta-title-input">
+                                        @error('meta_title')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-hint">
+                                            <span id="meta-title-count">{{ strlen($conceptPage->meta_title ?? '') }}</span>/255 characters. 
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Meta Description</label>
+                                        <textarea class="form-control @error('meta_description') is-invalid @enderror" 
+                                                  name="meta_description" rows="3" 
+                                                  placeholder="Enter description that will appear in search results"
+                                                  maxlength="500" id="meta-desc-input">{{ old('meta_description', $conceptPage->meta_description) }}</textarea>
+                                        @error('meta_description')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-hint">
+                                            <span id="meta-desc-count">{{ strlen($conceptPage->meta_description ?? '') }}</span>/500 characters. 
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Meta Keywords</label>
+                                        <input type="text" class="form-control @error('meta_keywords') is-invalid @enderror" 
+                                               name="meta_keywords" value="{{ old('meta_keywords', $conceptPage->meta_keywords) }}" 
+                                               placeholder="keywords separated by commas. e.g: property, house, Jakarta, residence"
+                                               maxlength="255" id="meta-keywords-input">
+                                        @error('meta_keywords')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-hint">
+                                            <span id="meta-keywords-count">{{ strlen($conceptPage->meta_keywords ?? '') }}</span>/255 characters. 
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -1075,6 +1109,40 @@
                 return isValid;
             });
         }
+    });
+</script>
+
+<script>
+    function setupCharacterCounter(inputId, countId, maxLength) {
+        const input = document.getElementById(inputId);
+        const counter = document.getElementById(countId);
+        
+        if (input && counter) {
+            input.addEventListener('input', function() {
+                const currentLength = this.value.length;
+                counter.textContent = currentLength;
+                
+                // Add warning colors
+                const percentage = (currentLength / maxLength) * 100;
+                if (percentage > 90) {
+                    counter.parentElement.classList.add('text-danger');
+                    counter.parentElement.classList.remove('text-warning');
+                } else if (percentage > 80) {
+                    counter.parentElement.classList.add('text-warning');
+                    counter.parentElement.classList.remove('text-danger');
+                } else {
+                    counter.parentElement.classList.remove('text-warning', 'text-danger');
+                }
+            });
+        }
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Character counters for meta fields
+        setupCharacterCounter('meta-title-input', 'meta-title-count', 255);
+        setupCharacterCounter('meta-desc-input', 'meta-desc-count', 500);
+        setupCharacterCounter('meta-keywords-input', 'meta-keywords-count', 255);
     });
 </script>
 @endpush

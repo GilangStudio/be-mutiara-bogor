@@ -77,7 +77,8 @@ class ImageService
         $timestamp = now()->format('YmdHis');
         $random = Str::random(6);
         
-        return $slug . $suffix . '-' . $timestamp . '-' . $random . '.webp';
+        // return $slug . $suffix . '-' . $timestamp . '-' . $random . '.webp';
+        return Str::random(12) . '-' . $random . '.webp';
     }
 
     /**

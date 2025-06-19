@@ -71,6 +71,23 @@ class Project extends Model
         return $this->siteplan_image_path ? asset('storage/' . $this->siteplan_image_path) : null;
     }
 
+    public function getBannerVideoUrlAttribute()
+    {
+        return $this->banner_video_path ? asset('storage/' . $this->banner_video_path) : null;
+    }
+
+    // Helper method untuk mendapatkan banner media URL
+    public function getBannerMediaUrlAttribute()
+    {
+        return $this->banner_type === 'video' ? $this->banner_video_url : $this->banner_url;
+    }
+
+    // Helper method untuk cek apakah banner adalah video
+    public function getIsBannerVideoAttribute()
+    {
+        return $this->banner_type === 'video';
+    }
+
     // Meta SEO Accessors
     public function getMetaTitleDisplayAttribute()
     {

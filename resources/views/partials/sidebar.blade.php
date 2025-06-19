@@ -70,8 +70,8 @@
                         </div>
                     </div>
                 </li>
-                <li class="nav-item {{ Route::is('facilities.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('facilities.index') }}">
+                <li class="nav-item {{ Route::is('accessibilities.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('accessibilities.index') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block"><i
                                 class="ti ti-building fs-2"></i></span>
                         <span class="nav-link-title"> Accessibility </span>

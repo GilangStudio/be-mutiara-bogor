@@ -12,6 +12,7 @@ use App\Models\HomeFeature;
 use App\Models\SocialMedia;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Accessibility;
 use App\Models\CompanyProfile;
 use App\Models\ContactMessage;
 use App\Models\HomePageSetting;
@@ -213,10 +214,12 @@ class LandingPageController extends Controller
                 'data' => [
                     'page' => [
                         'title' => $conceptPage->title,
-                        'meta_description' => $conceptPage->meta_description,
                         'description' => $conceptPage->description,
                         'banner_image_url' => $conceptPage->banner_image_url,
                         'banner_alt_text' => $conceptPage->banner_alt_text,
+                        'meta_title' => $conceptPage->meta_title,
+                        'meta_description' => $conceptPage->meta_description,
+                        'meta_keywords' => $conceptPage->meta_keywords,
                     ],
                     'sections' => $sections->map(function ($section) {
                         return [
@@ -303,7 +306,10 @@ class LandingPageController extends Controller
                         'slug' => $project->slug,
                         'short_description' => $project->short_description,
                         'main_image_url' => $project->main_image_url,
+                        'banner_type' => $project->banner_type, // Tambah ini
                         'banner_url' => $project->banner_url,
+                        'banner_video_url' => $project->banner_video_url, // Tambah ini
+                        'banner_media_url' => $project->banner_media_url, // Tambah ini
                         'logo_url' => $project->logo_url,
                         'units_count' => $project->units_count,
                         'category' => [
@@ -358,7 +364,8 @@ class LandingPageController extends Controller
                     'meta_description' => $project->meta_description,
                     'meta_keywords' => $project->meta_keywords,
                     'main_image_url' => $project->main_image_url,
-                    'banner_url' => $project->banner_url,
+                    'banner_type' => $project->banner_type, // Tambah ini
+                    'banner_media_url' => $project->banner_media_url, // Tambah ini
                     'logo_url' => $project->logo_url,
                     'siteplan_image_url' => $project->siteplan_image_url,
                     'category' => [
@@ -612,17 +619,17 @@ class LandingPageController extends Controller
     public function getFacilities()
     {
         try {
-            $facilities = Facility::active()->ordered()->get();
+            $accessibilities = Accessibility::active()->ordered()->get();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Facilities berhasil diambil',
-                'data' => $facilities->map(function ($facility) {
+                'message' => 'Accessibilities berhasil diambil',
+                'data' => $accessibilities->map(function ($accessibility) {
                     return [
-                        'id' => $facility->id,
-                        'name' => $facility->name,
-                        'description' => $facility->description,
-                        'image_url' => $facility->image_url,
+                        'id' => $accessibility->id,
+                        'name' => $accessibility->name,
+                        'description' => $accessibility->description,
+                        'image_url' => $accessibility->image_url,
                     ];
                 })
             ]);
@@ -630,7 +637,7 @@ class LandingPageController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan saat mengambil data facilities',
+                'message' => 'Terjadi kesalahan saat mengambil data Accessibilities',
                 'data' => null
             ], 500);
         }

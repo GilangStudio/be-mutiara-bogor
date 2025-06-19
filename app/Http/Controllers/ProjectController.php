@@ -35,7 +35,9 @@ class ProjectController extends Controller
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:255',
             'main_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120', // 5MB
-            'banner_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'banner_type' => 'required|in:image,video',
+            'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'banner_video' => 'nullable|mimes:mp4,mov,avi|max:51200', // 50MB untuk video
             'logo_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048', // 2MB
             'siteplan_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
@@ -58,9 +60,12 @@ class ProjectController extends Controller
             'main_image.required' => 'Main image is required',
             'main_image.image' => 'File must be an image',
             'main_image.max' => 'Main image size cannot exceed 5MB',
-            'banner_image.required' => 'Banner image is required',
-            'banner_image.image' => 'File must be an image',
+            'banner_type.required' => 'Banner type is required',
+            'banner_type.in' => 'Banner type must be image or video',
+            'banner_image.image' => 'Banner file must be an image',
             'banner_image.max' => 'Banner image size cannot exceed 5MB',
+            'banner_video.mimes' => 'Banner video must be mp4, mov, or avi format',
+            'banner_video.max' => 'Banner video size cannot exceed 50MB',
             'logo_image.image' => 'File must be an image',
             'logo_image.max' => 'Logo size cannot exceed 2MB',
             'siteplan_image.image' => 'File must be an image',
@@ -84,12 +89,19 @@ class ProjectController extends Controller
                 1200
             );
 
-            $bannerPath = ImageService::uploadAndCompress(
-                $request->file('banner_image'), 
-                'projects/banner', 
-                85, 
-                1920
-            );
+            $bannerPath = null;
+            $bannerVideoPath = null;
+            
+            if ($request->banner_type === 'image' && $request->hasFile('banner_image')) {
+                $bannerPath = ImageService::uploadAndCompress(
+                    $request->file('banner_image'), 
+                    'projects/banner', 
+                    85, 
+                    1920
+                );
+            } elseif ($request->banner_type === 'video' && $request->hasFile('banner_video')) {
+                $bannerVideoPath = $request->file('banner_video')->store('projects/banner', 'public');
+            }
 
             $logoPath = null;
             if ($request->hasFile('logo_image')) {
@@ -122,7 +134,10 @@ class ProjectController extends Controller
                 'meta_description' => $request->meta_description,
                 'meta_keywords' => $request->meta_keywords,
                 'main_image_path' => $mainImagePath,
+                'main_image_path' => $mainImagePath,
+                'banner_type' => $request->banner_type,
                 'banner_path' => $bannerPath,
+                'banner_video_path' => $bannerVideoPath,
                 'logo_path' => $logoPath,
                 'siteplan_image_path' => $siteplanPath,
                 'order' => $order,
@@ -189,7 +204,9 @@ class ProjectController extends Controller
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:255',
             'main_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'banner_type' => 'required|in:image,video',
             'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'banner_video' => 'nullable|mimes:mp4,mov,avi|max:51200',
             'logo_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'siteplan_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
@@ -218,6 +235,10 @@ class ProjectController extends Controller
             'main_image.max' => 'Main image size cannot exceed 5MB',
             'banner_image.image' => 'File must be an image',
             'banner_image.max' => 'Banner image size cannot exceed 5MB',
+            'banner_type.required' => 'Banner type is required',
+            'banner_type.in' => 'Banner type must be image or video',
+            'banner_video.mimes' => 'Banner video must be mp4, mov, or avi format',
+            'banner_video.max' => 'Banner video size cannot exceed 50MB',
             'logo_image.image' => 'File must be an image',
             'logo_image.max' => 'Logo size cannot exceed 2MB',
             'siteplan_image.image' => 'File must be an image',
@@ -241,13 +262,42 @@ class ProjectController extends Controller
                 1200
             );
 
-            $bannerPath = ImageService::updateImage(
-                $request->file('banner_image'),
-                $project->banner_path,
-                'projects/banner',
-                85,
-                1920
-            );
+            $bannerPath = $project->banner_path;
+            $bannerVideoPath = $project->banner_video_path;
+            
+            if ($request->banner_type === 'image') {
+                // Jika switch ke image atau update image
+                if ($request->hasFile('banner_image')) {
+                    // Delete old video jika ada
+                    if ($bannerVideoPath) {
+                        ImageService::deleteFile($bannerVideoPath);
+                        $bannerVideoPath = null;
+                    }
+                    // Update image
+                    $bannerPath = ImageService::updateImage(
+                        $request->file('banner_image'),
+                        $bannerPath,
+                        'projects/banner',
+                        85,
+                        1920
+                    );
+                }
+            } elseif ($request->banner_type === 'video') {
+                // Jika switch ke video atau update video
+                if ($request->hasFile('banner_video')) {
+                    // Delete old image jika ada
+                    if ($bannerPath) {
+                        ImageService::deleteFile($bannerPath);
+                        $bannerPath = null;
+                    }
+                    // Delete old video jika ada
+                    if ($bannerVideoPath) {
+                        ImageService::deleteFile($bannerVideoPath);
+                    }
+                    // Upload new video
+                    $bannerVideoPath = $request->file('banner_video')->store('projects/banner', 'public');
+                }
+            }
 
             $logoPath = ImageService::updateImage(
                 $request->file('logo_image'),
@@ -276,7 +326,9 @@ class ProjectController extends Controller
                 'meta_description' => $request->meta_description,
                 'meta_keywords' => $request->meta_keywords,
                 'main_image_path' => $mainImagePath,
+                'banner_type' => $request->banner_type,
                 'banner_path' => $bannerPath,
+                'banner_video_path' => $bannerVideoPath,
                 'logo_path' => $logoPath,
                 'siteplan_image_path' => $siteplanPath,
                 'is_active' => $request->has('status')
@@ -315,6 +367,7 @@ class ProjectController extends Controller
             ImageService::deleteFiles([
                 $project->main_image_path,
                 $project->banner_path,
+                $project->banner_video_path,
                 $project->logo_path,
                 $project->siteplan_image_path
             ]);

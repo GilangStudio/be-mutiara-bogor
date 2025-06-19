@@ -11,16 +11,16 @@ class AccessibilityController extends Controller
 {
     public function index()
     {
-        $facilities = Accessibility::orderBy('order', 'asc')
+        $accessibilities = Accessibility::orderBy('order', 'asc')
                             ->orderBy('created_at', 'desc')
                             ->get();
         
-        return view('pages.facilities.index', compact('facilities'));
+        return view('pages.accessibility.index', compact('accessibilities'));
     }
 
     public function create()
     {
-        return view('pages.facilities.create');
+        return view('pages.accessibility.create');
     }
 
     public function store(Request $request)
@@ -44,7 +44,7 @@ class AccessibilityController extends Controller
             // Upload image
             $imagePath = ImageService::uploadAndCompress(
                 $request->file('image'), 
-                'facilities', 
+                'accessibility', 
                 85, 
                 1200
             );
@@ -57,7 +57,7 @@ class AccessibilityController extends Controller
                 'is_active' => $request->has('status'),
             ]);
 
-            return redirect()->route('facilities.index')
+            return redirect()->route('accessibilities.index')
                            ->with('success', 'Accessibility created successfully');
 
         } catch (\Exception $e) {
@@ -69,7 +69,7 @@ class AccessibilityController extends Controller
 
     public function edit(Accessibility $accessibility)
     {
-        return view('pages.facilities.edit', compact('accessibility'));
+        return view('pages.accessibility.edit', compact('accessibility'));
     }
 
     public function update(Request $request, Accessibility $accessibility)
@@ -90,7 +90,7 @@ class AccessibilityController extends Controller
             $imagePath = ImageService::updateImage(
                 $request->file('image'),
                 $accessibility->image_path,
-                'facilities',
+                'accessibility',
                 85,
                 1200
             );
@@ -125,11 +125,11 @@ class AccessibilityController extends Controller
             // Reorder after delete
             GeneratorService::reorderAfterDelete(new Accessibility());
 
-            return redirect()->route('facilities.index')
+            return redirect()->route('accessibilities.index')
                            ->with('success', 'Accessibility deleted successfully');
 
         } catch (\Exception $e) {
-            return redirect()->route('facilities.index')
+            return redirect()->route('accessibilities.index')
                            ->with('error', 'Failed to delete accessibility: ' . $e->getMessage());
         }
     }
@@ -138,7 +138,7 @@ class AccessibilityController extends Controller
     {
         $request->validate([
             'orders' => 'required|array',
-            'orders.*.id' => 'required|exists:facilities,id',
+            'orders.*.id' => 'required|exists:accessibilities,id',
             'orders.*.order' => 'required|integer|min:1'
         ]);
 

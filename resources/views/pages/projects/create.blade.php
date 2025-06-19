@@ -64,6 +64,58 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
+                            <div class="row">
+                                {{-- Banner Media --}}
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tipe Banner <span class="text-danger">*</span></label>
+                                        <select class="form-select @error('banner_type') is-invalid @enderror" 
+                                                name="banner_type" id="banner-type-select" required>
+                                            <option value="image" {{ old('banner_type', 'image') == 'image' ? 'selected' : '' }}>
+                                                Gambar
+                                            </option>
+                                            <option value="video" {{ old('banner_type') == 'video' ? 'selected' : '' }}>
+                                                Video
+                                            </option>
+                                        </select>
+                                        @error('banner_type')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-hint">Pilih tipe media untuk banner project</small>
+                                    </div>
+                                </div>
+
+                                {{-- Banner Image Input --}}
+                                <div class="col-6" id="banner-image-section">
+                                    <div class="mb-3">
+                                        <label class="form-label">Gambar Banner <span class="text-danger">*</span></label>
+                                        <input type="file" class="form-control @error('banner_image') is-invalid @enderror" 
+                                            name="banner_image" accept="image/*" id="banner-image">
+                                        @error('banner_image')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-hint">Rekomendasi: 1920x600px, Maks: 5MB</small>
+                                        <div class="mt-2" id="banner-image-preview"></div>
+                                    </div>
+                                </div>
+
+                                {{-- Banner Video Input --}}
+                                <div class="col-6" id="banner-video-section" style="display: none;">
+                                    <div class="mb-3">
+                                        <label class="form-label">Video Banner <span class="text-danger">*</span></label>
+                                        <input type="file" class="form-control @error('banner_video') is-invalid @enderror" 
+                                            name="banner_video" accept="video/*" id="banner-video">
+                                        @error('banner_video')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-hint">Format: MP4, MOV, AVI. Maks: 50MB</small>
+                                        <div class="mt-2" id="banner-video-preview"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">Kategori <span class="text-danger">*</span></label>
                                 <select class="form-select @error('category_id') is-invalid @enderror" name="category_id" required>
@@ -141,7 +193,7 @@
         </div>
 
         {{-- Images --}}
-        <div class="col-12">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"><i class="ti ti-photo me-2"></i>Gambar</h3>
@@ -152,7 +204,7 @@
                 <div class="card-body">
                     <div class="row">
                         {{-- Main Image --}}
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Gambar Utama <span class="text-danger">*</span></label>
                                 <input type="file" class="form-control @error('main_image') is-invalid @enderror" 
@@ -165,22 +217,8 @@
                             </div>
                         </div>
 
-                        {{-- Banner Image --}}
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Gambar Banner <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control @error('banner_image') is-invalid @enderror" 
-                                       name="banner_image" accept="image/*" required id="banner-image">
-                                @error('banner_image')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <small class="form-hint">Rekomendasi: 1920x600px, Maks: 5MB</small>
-                                <div class="mt-2" id="banner-image-preview"></div>
-                            </div>
-                        </div>
-
                         {{-- Logo Image --}}
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Logo Project</label>
                                 <input type="file" class="form-control @error('logo_image') is-invalid @enderror" 
@@ -194,7 +232,7 @@
                         </div>
 
                         {{-- Siteplan Image --}}
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Gambar Siteplan</label>
                                 <input type="file" class="form-control @error('siteplan_image') is-invalid @enderror" 
@@ -212,7 +250,7 @@
         </div>
 
         {{-- Gallery Images Section --}}
-        <div class="col-12">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -246,7 +284,7 @@
         </div>
 
         {{-- Facility Images Section --}}
-        <div class="col-12">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -300,232 +338,320 @@
 @include('components.scripts.wysiwyg')
 @include('components.alert')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Image preview functionality
-        function setupImagePreview(inputId, previewId, maxFileSize = 5) {
-            const input = document.getElementById(inputId);
-            const preview = document.getElementById(previewId);
+    
+document.addEventListener('DOMContentLoaded', function() {
+    // Banner type toggle functionality
+    const bannerTypeSelect = document.getElementById('banner-type-select');
+    const bannerImageSection = document.getElementById('banner-image-section');
+    const bannerVideoSection = document.getElementById('banner-video-section');
+    const bannerImageInput = document.getElementById('banner-image');
+    const bannerVideoInput = document.getElementById('banner-video');
+
+    if (bannerTypeSelect) {
+        bannerTypeSelect.addEventListener('change', function() {
+            const selectedType = this.value;
             
-            if (input && preview) {
-                input.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-
-                        // Check file size
-                        if (file.size > maxFileSize * 1024 * 1024) {
-                            showAlert(input, 'danger', `Ukuran file melebihi batas ${maxFileSize} MB.`);
-                            input.value = '';
-                            return;
-                        }
-
-                        reader.onload = function(e) {
-                            preview.innerHTML = `
-                                <div class="card" style="max-width: 200px;">
-                                    <img src="${e.target.result}" class="card-img-top" style="height: 120px; object-fit: cover;">
-                                    <div class="card-body p-2">
-                                        <small class="text-secondary">${file.name}</small><br>
-                                        <small class="text-secondary">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
-                                    </div>
-                                </div>
-                            `;
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        preview.innerHTML = '';
-                    }
-                });
+            if (selectedType === 'image') {
+                bannerImageSection.style.display = 'block';
+                bannerVideoSection.style.display = 'none';
+                bannerImageInput.required = true;
+                bannerVideoInput.required = false;
+                bannerVideoInput.value = '';
+                document.getElementById('banner-video-preview').innerHTML = '';
+            } else if (selectedType === 'video') {
+                bannerImageSection.style.display = 'none';
+                bannerVideoSection.style.display = 'block';
+                bannerImageInput.required = false;
+                bannerVideoInput.required = true;
+                bannerImageInput.value = '';
+                document.getElementById('banner-image-preview').innerHTML = '';
             }
-        }
-
-        // Setup previews for all image inputs
-        setupImagePreview('main-image', 'main-image-preview', 5);
-        setupImagePreview('banner-image', 'banner-image-preview', 5);
-        setupImagePreview('logo-image', 'logo-image-preview', 2);
-        setupImagePreview('siteplan-image', 'siteplan-image-preview', 5);
-
-        // Gallery images handling
-        const galleryInput = document.getElementById('gallery-images');
-        const galleryPreview = document.getElementById('gallery-preview');
-        let galleryFiles = [];
-
-        if (galleryInput) {
-            galleryInput.addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
-                galleryFiles = files;
-                renderGalleryPreview();
-            });
-        }
-
-        function renderGalleryPreview() {
-            galleryPreview.innerHTML = '';
-            
-            if (galleryFiles.length === 0) {
-                return;
-            }
-
-            galleryFiles.forEach((file, index) => {
-                if (file) {
-                    // Validate file
-                    if (!file.type.startsWith('image/')) {
-                        showAlert(galleryInput, 'danger', `File ${file.name} bukan gambar yang valid`);
-                        return;
-                    }
-                    
-                    if (file.size > 5 * 1024 * 1024) {
-                        showAlert(galleryInput, 'danger', `File ${file.name} terlalu besar (maks: 5MB)`);
-                        return;
-                    }
-
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const col = document.createElement('div');
-                        col.className = 'col-md-4';
-                        col.innerHTML = `
-                            <div class="card gallery-item">
-                                <img src="${e.target.result}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                                <div class="card-body p-3">
-                                    <div class="mb-2">
-                                        <label class="form-label form-label-sm">Alt Text</label>
-                                        <input type="text" class="form-control form-control-sm" 
-                                            name="gallery_alt_texts[${index}]" 
-                                            placeholder="Deskripsikan gambar">
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label form-label-sm">Caption</label>
-                                        <textarea class="form-control form-control-sm" rows="2" 
-                                                name="gallery_captions[${index}]" 
-                                                placeholder="Caption gambar"></textarea>
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="button" class="btn btn-sm btn-outline-danger" 
-                                                onclick="removeGalleryImage(${index})">
-                                            <i class="ti ti-trash"></i> Hapus
-                                        </button>
-                                    </div>
-                                    <small class="text-secondary d-block mt-2">
-                                        ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
-                                    </small>
-                                </div>
-                            </div>
-                        `;
-                        galleryPreview.appendChild(col);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        // Remove gallery image function
-        window.removeGalleryImage = function(index) {
-            galleryFiles.splice(index, 1);
-            
-            // Create new FileList
-            const dt = new DataTransfer();
-            galleryFiles.forEach(file => dt.items.add(file));
-            galleryInput.files = dt.files;
-            
-            renderGalleryPreview();
-        };
-
-        // Facility images handling
-        const facilityInput = document.getElementById('facility-images');
-        const facilityPreview = document.getElementById('facility-preview');
-        let facilityFiles = [];
-
-        if (facilityInput) {
-            facilityInput.addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
-                facilityFiles = files;
-                renderFacilityPreview();
-            });
-        }
-
-        function renderFacilityPreview() {
-            facilityPreview.innerHTML = '';
-            
-            if (facilityFiles.length === 0) {
-                return;
-            }
-
-            facilityFiles.forEach((file, index) => {
-                if (file) {
-                    // Validate file
-                    if (!file.type.startsWith('image/')) {
-                        showAlert(facilityInput, 'danger', `File ${file.name} bukan gambar yang valid`);
-                        return;
-                    }
-                    
-                    if (file.size > 5 * 1024 * 1024) {
-                        showAlert(facilityInput, 'danger', `File ${file.name} terlalu besar (maks: 5MB)`);
-                        return;
-                    }
-
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const col = document.createElement('div');
-                        col.className = 'col-md-4';
-                        col.innerHTML = `
-                            <div class="card gallery-item">
-                                <img src="${e.target.result}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                                <div class="card-body p-3">
-                                    <div class="mb-2">
-                                        <label class="form-label form-label-sm">Nama Fasilitas</label>
-                                        <input type="text" class="form-control form-control-sm" 
-                                            name="facility_titles[${index}]" 
-                                            placeholder="Nama fasilitas">
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label form-label-sm">Deskripsi</label>
-                                        <textarea class="form-control form-control-sm" rows="2" 
-                                                name="facility_descriptions[${index}]" 
-                                                placeholder="Deskripsi fasilitas"></textarea>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label form-label-sm">Alt Text</label>
-                                        <input type="text" class="form-control form-control-sm" 
-                                            name="facility_alt_texts[${index}]" 
-                                            placeholder="Alt text untuk SEO">
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="button" class="btn btn-sm btn-outline-danger" 
-                                                onclick="removeFacilityImage(${index})">
-                                            <i class="ti ti-trash"></i> Hapus
-                                        </button>
-                                    </div>
-                                    <small class="text-secondary d-block mt-2">
-                                        ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
-                                    </small>
-                                </div>
-                            </div>
-                        `;
-                        facilityPreview.appendChild(col);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        // Remove facility image function
-        window.removeFacilityImage = function(index) {
-            facilityFiles.splice(index, 1);
-            
-            // Create new FileList
-            const dt = new DataTransfer();
-            facilityFiles.forEach(file => dt.items.add(file));
-            facilityInput.files = dt.files;
-            
-            renderFacilityPreview();
-        };
-
-        // Form submission loading state
-        const form = document.querySelector('form');
-        const submitBtn = form.querySelector('button[type="submit"]');
+        });
         
+        // Trigger change event on page load untuk set initial state
+        bannerTypeSelect.dispatchEvent(new Event('change'));
+    }
+
+    // Image preview functionality
+    function setupImagePreview(inputId, previewId, maxFileSize = 5) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        
+        if (input && preview) {
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+
+                    // Check file size
+                    if (file.size > maxFileSize * 1024 * 1024) {
+                        showAlert(input, 'danger', `Ukuran file melebihi batas ${maxFileSize} MB.`);
+                        input.value = '';
+                        return;
+                    }
+
+                    // Check file type
+                    if (!file.type.startsWith('image/')) {
+                        showAlert(input, 'danger', 'File harus berupa gambar yang valid.');
+                        input.value = '';
+                        return;
+                    }
+
+                    reader.onload = function(e) {
+                        preview.innerHTML = `
+                            <div class="card" style="max-width: 200px;">
+                                <img src="${e.target.result}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                                <div class="card-body p-2">
+                                    <small class="text-secondary">${file.name}</small><br>
+                                    <small class="text-secondary">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                                </div>
+                            </div>
+                        `;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.innerHTML = '';
+                }
+            });
+        }
+    }
+
+    // Video preview functionality
+    function setupVideoPreview(inputId, previewId, maxFileSize = 50) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        
+        if (input && preview) {
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Check file size
+                    if (file.size > maxFileSize * 1024 * 1024) {
+                        showAlert(input, 'danger', `Ukuran file melebihi batas ${maxFileSize} MB.`);
+                        input.value = '';
+                        return;
+                    }
+
+                    // Check file type
+                    if (!file.type.startsWith('video/')) {
+                        showAlert(input, 'danger', 'File harus berupa video yang valid.');
+                        input.value = '';
+                        return;
+                    }
+
+                    const url = URL.createObjectURL(file);
+                    preview.innerHTML = `
+                        <div class="card" style="max-width: 300px;">
+                            <video controls class="card-img-top" style="height: 120px; object-fit: cover;">
+                                <source src="${url}" type="${file.type}">
+                                Browser Anda tidak mendukung video HTML5.
+                            </video>
+                            <div class="card-body p-2">
+                                <small class="text-secondary">${file.name}</small><br>
+                                <small class="text-secondary">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    preview.innerHTML = '';
+                }
+            });
+        }
+    }
+
+    // Setup previews for all image inputs
+    setupImagePreview('main-image', 'main-image-preview', 5);
+    setupImagePreview('banner-image', 'banner-image-preview', 5);
+    setupImagePreview('logo-image', 'logo-image-preview', 2);
+    setupImagePreview('siteplan-image', 'siteplan-image-preview', 5);
+
+    // Setup banner video preview
+    setupVideoPreview('banner-video', 'banner-video-preview', 50);
+
+    // Gallery images handling
+    const galleryInput = document.getElementById('gallery-images');
+    const galleryPreview = document.getElementById('gallery-preview');
+    let galleryFiles = [];
+
+    if (galleryInput) {
+        galleryInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            galleryFiles = files;
+            renderGalleryPreview();
+        });
+    }
+
+    function renderGalleryPreview() {
+        galleryPreview.innerHTML = '';
+        
+        if (galleryFiles.length === 0) {
+            return;
+        }
+
+        galleryFiles.forEach((file, index) => {
+            if (file) {
+                // Validate file
+                if (!file.type.startsWith('image/')) {
+                    showAlert(galleryInput, 'danger', `File ${file.name} bukan gambar yang valid`);
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert(galleryInput, 'danger', `File ${file.name} terlalu besar (maks: 5MB)`);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-4';
+                    col.innerHTML = `
+                        <div class="card gallery-item">
+                            <img src="${e.target.result}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                            <div class="card-body p-3">
+                                <div class="mb-2">
+                                    <label class="form-label form-label-sm">Alt Text</label>
+                                    <input type="text" class="form-control form-control-sm" 
+                                        name="gallery_alt_texts[${index}]" 
+                                        placeholder="Deskripsikan gambar">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label form-label-sm">Caption</label>
+                                    <textarea class="form-control form-control-sm" rows="2" 
+                                            name="gallery_captions[${index}]" 
+                                            placeholder="Caption gambar"></textarea>
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            onclick="removeGalleryImage(${index})">
+                                        <i class="ti ti-trash"></i> Hapus
+                                    </button>
+                                </div>
+                                <small class="text-secondary d-block mt-2">
+                                    ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
+                                </small>
+                            </div>
+                        </div>
+                    `;
+                    galleryPreview.appendChild(col);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Remove gallery image function
+    window.removeGalleryImage = function(index) {
+        galleryFiles.splice(index, 1);
+        
+        // Create new FileList
+        const dt = new DataTransfer();
+        galleryFiles.forEach(file => dt.items.add(file));
+        galleryInput.files = dt.files;
+        
+        renderGalleryPreview();
+    };
+
+    // Facility images handling
+    const facilityInput = document.getElementById('facility-images');
+    const facilityPreview = document.getElementById('facility-preview');
+    let facilityFiles = [];
+
+    if (facilityInput) {
+        facilityInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            facilityFiles = files;
+            renderFacilityPreview();
+        });
+    }
+
+    function renderFacilityPreview() {
+        facilityPreview.innerHTML = '';
+        
+        if (facilityFiles.length === 0) {
+            return;
+        }
+
+        facilityFiles.forEach((file, index) => {
+            if (file) {
+                // Validate file
+                if (!file.type.startsWith('image/')) {
+                    showAlert(facilityInput, 'danger', `File ${file.name} bukan gambar yang valid`);
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert(facilityInput, 'danger', `File ${file.name} terlalu besar (maks: 5MB)`);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-4';
+                    col.innerHTML = `
+                        <div class="card gallery-item">
+                            <img src="${e.target.result}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                            <div class="card-body p-3">
+                                <div class="mb-2">
+                                    <label class="form-label form-label-sm">Nama Fasilitas</label>
+                                    <input type="text" class="form-control form-control-sm" 
+                                        name="facility_titles[${index}]" 
+                                        placeholder="Nama fasilitas">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label form-label-sm">Deskripsi</label>
+                                    <textarea class="form-control form-control-sm" rows="2" 
+                                            name="facility_descriptions[${index}]" 
+                                            placeholder="Deskripsi fasilitas"></textarea>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label form-label-sm">Alt Text</label>
+                                    <input type="text" class="form-control form-control-sm" 
+                                        name="facility_alt_texts[${index}]" 
+                                        placeholder="Alt text untuk SEO">
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            onclick="removeFacilityImage(${index})">
+                                        <i class="ti ti-trash"></i> Hapus
+                                    </button>
+                                </div>
+                                <small class="text-secondary d-block mt-2">
+                                    ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
+                                </small>
+                            </div>
+                        </div>
+                    `;
+                    facilityPreview.appendChild(col);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Remove facility image function
+    window.removeFacilityImage = function(index) {
+        facilityFiles.splice(index, 1);
+        
+        // Create new FileList
+        const dt = new DataTransfer();
+        facilityFiles.forEach(file => dt.items.add(file));
+        facilityInput.files = dt.files;
+        
+        renderFacilityPreview();
+    };
+
+    // Form submission loading state
+    const form = document.querySelector('form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    if (form && submitBtn) {
         form.addEventListener('submit', function() {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Membuat Project...';
         });
-    });
+    }
+});
 </script>
 @endpush

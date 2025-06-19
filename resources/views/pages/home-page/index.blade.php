@@ -321,7 +321,7 @@
 @endif
 
 {{-- Quick Navigation --}}
-<div class="row g-3 mb-4">
+<div class="row g-3">
     <div class="col-12">
         <div class="card">
             <div class="card-body py-3">
@@ -500,6 +500,9 @@
                     </div>
                 </div>
             </div>
+
+            {{-- SEO Meta --}}
+            @include('components.seo-meta-form', ['data' => $homePage, 'type' => 'edit'])
 
             {{-- About Development Section --}}
             <div class="card mt-3" id="about-section">

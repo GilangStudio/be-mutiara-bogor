@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Facilities Management')
+@section('title', 'Accessibilities Management')
 
 @push('styles')
 <style>
@@ -74,9 +74,9 @@
 
 @section('header')
 <div class="d-flex justify-content-between align-items-center">
-    <h2 class="page-title">Facilities Management</h2>
-    <a href="{{ route('facilities.create') }}" class="btn btn-primary">
-        <i class="ti ti-plus me-1"></i> Add Facility
+    <h2 class="page-title">Accessibility Management</h2>
+    <a href="{{ route('accessibilities.create') }}" class="btn btn-primary">
+        <i class="ti ti-plus me-1"></i> Add Accessibility
     </a>
 </div>
 @endsection
@@ -116,7 +116,7 @@
             </span>
             <input type="text" 
                    class="form-control" 
-                   placeholder="Search facilities..." 
+                   placeholder="Search accessibilities..." 
                    id="search-input">
         </div>
         <button type="button" class="btn btn-outline-secondary" id="toggle-reorder">
@@ -125,7 +125,7 @@
     </div>
 </div>
 
-{{-- Facilities Table --}}
+{{-- Accessibilities Table --}}
 <div class="col-12">
     <div class="card">
         <div class="card-body p-0">
@@ -137,24 +137,24 @@
                                 <i class="ti ti-arrows-sort"></i>
                             </th>
                             <th width="80">Image</th>
-                            <th><button class="table-sort" data-sort="sort-name">Facility Name</button></th>
+                            <th><button class="table-sort" data-sort="sort-name">Accessibility Name</button></th>
                             <th><button class="table-sort" data-sort="sort-order">Order</button></th>
                             <th><button class="table-sort" data-sort="sort-status">Status</button></th>
                             <th width="150">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="table-tbody" id="sortable-table">
-                        @forelse($facilities as $index => $facility)
-                        <tr data-id="{{ $facility->id }}" class="sortable-row">
+                        @forelse($accessibilities as $index => $accessibility)
+                        <tr data-id="{{ $accessibility->id }}" class="sortable-row">
                             <td class="reorder-handle" style="display: none;">
                                 <div class="cursor-move text-secondary">
                                     <i class="ti ti-grip-vertical"></i>
                                 </div>
                             </td>
                             <td>
-                                @if($facility->image_url)
+                                @if($accessibility->image_url)
                                 <div class="avatar avatar-md rounded" 
-                                     style="background-image: url('{{ $facility->image_url }}'); background-size: cover; background-position: center;"></div>
+                                     style="background-image: url('{{ $accessibility->image_url }}'); background-size: cover; background-position: center;"></div>
                                 @else
                                 <div class="avatar avatar-md rounded bg-secondary-lt">
                                     <i class="ti ti-building"></i>
@@ -163,29 +163,29 @@
                             </td>
                             <td class="sort-name">
                                 <div>
-                                    <div class="fw-bold">{{ $facility->name }}</div>
-                                    @if($facility->description)
-                                    <small class="text-secondary">{{ Str::limit($facility->description, 80) }}</small>
+                                    <div class="fw-bold">{{ $accessibility->name }}</div>
+                                    @if($accessibility->description)
+                                    <small class="text-secondary">{{ Str::limit($accessibility->description, 80) }}</small>
                                     @endif
                                 </div>
                             </td>
-                            <td class="sort-order">{{ $facility->order }}</td>
+                            <td class="sort-order">{{ $accessibility->order }}</td>
                             <td class="sort-status">
-                                <span class="badge badge-sm bg-{{ $facility->is_active ? 'green' : 'red' }}-lt">
-                                    {{ $facility->status_text }}
+                                <span class="badge badge-sm bg-{{ $accessibility->is_active ? 'green' : 'red' }}-lt">
+                                    {{ $accessibility->status_text }}
                                 </span>
                             </td>
                             <td>
                                 <div class="btn-list flex-nowrap action-buttons">
-                                    <a href="{{ route('facilities.edit', $facility) }}" 
-                                       class="btn btn-sm btn-outline-primary" title="Edit Facility">
+                                    <a href="{{ route('accessibilities.edit', $accessibility) }}" 
+                                       class="btn btn-sm btn-outline-primary" title="Edit Accessibility">
                                         <i class="ti ti-edit"></i>
                                     </a>
                                     <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
-                                            data-id="{{ $facility->id }}"
-                                            data-name="{{ $facility->name }}"
-                                            data-url="{{ route('facilities.destroy', $facility) }}"
-                                            title="Delete Facility">
+                                            data-id="{{ $accessibility->id }}"
+                                            data-name="{{ $accessibility->name }}"
+                                            data-url="{{ route('accessibilities.destroy', $accessibility) }}"
+                                            title="Delete Accessibility">
                                         <i class="ti ti-trash"></i>
                                     </button>
                                 </div>
@@ -198,14 +198,14 @@
                                     <div class="empty-icon">
                                         <i class="ti ti-building icon icon-lg"></i>
                                     </div>
-                                    <p class="empty-title h3">No facilities yet</p>
+                                    <p class="empty-title h3">No accessibilities yet</p>
                                     <p class="empty-subtitle text-secondary">
-                                        Get started by creating your first facility.<br>
+                                        Get started by creating your first accessibility.<br>
                                         Showcase amenities and features available to your clients.
                                     </p>
                                     <div class="empty-action">
-                                        <a href="{{ route('facilities.create') }}" class="btn btn-primary">
-                                            <i class="ti ti-plus me-1"></i> Create First Facility
+                                        <a href="{{ route('accessibilities.create') }}" class="btn btn-primary">
+                                            <i class="ti ti-plus me-1"></i> Create First Accessibility
                                         </a>
                                     </div>
                                 </div>
@@ -324,7 +324,7 @@
                                     <div class="empty-icon">
                                         <i class="ti ti-search icon icon-lg"></i>
                                     </div>
-                                    <p class="empty-title">No facilities found</p>
+                                    <p class="empty-title">No accessibilities found</p>
                                     <p class="empty-subtitle text-secondary">
                                         Try adjusting your search terms.
                                     </p>
@@ -392,7 +392,7 @@
         function disableReorderMode() {
             // Enable search
             searchInput.disabled = false;
-            searchInput.placeholder = 'Search facilities...';
+            searchInput.placeholder = 'Search accessibilities...';
             
             // Hide reorder handles
             reorderHandles.forEach(handle => handle.style.display = 'none');
@@ -433,7 +433,7 @@
             });
             
             // Send AJAX request to update order
-            fetch('{{ route('facilities.reorder') }}', {
+            fetch('{{ route('accessibilities.reorder') }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -455,7 +455,7 @@
             .catch(error => {
                 console.error('Error:', error);
                 showToast('Failed to update order', 'error');
-                setTimeout(() => location.reload(), 1000);
+                // setTimeout(() => location.reload(), 1000);
             });
         }
 
@@ -467,7 +467,7 @@
                 <div class="d-flex">
                     <div>
                         <h4>Reorder Mode Active</h4>
-                        Drag the <i class="ti ti-grip-vertical"></i> handle to reorder facilities. Search and other functions are disabled during reorder mode.
+                        Drag the <i class="ti ti-grip-vertical"></i> handle to reorder accessibilities. Search and other functions are disabled during reorder mode.
                     </div>
                 </div>
             `;
