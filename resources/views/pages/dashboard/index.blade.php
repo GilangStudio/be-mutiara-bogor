@@ -176,8 +176,8 @@
                             </span>
                         </div>
                         <div class="col">
-                            <div class="font-weight-medium">{{ \App\Models\Facility::count() }} Fasilitas</div>
-                            <div class="text-secondary">{{ \App\Models\Facility::where('is_active', true)->count() }} aktif</div>
+                            <div class="font-weight-medium">{{ \App\Models\Accessibility::count() }} Accessibility</div>
+                            <div class="text-secondary">{{ \App\Models\Accessibility::where('is_active', true)->count() }} aktif</div>
                         </div>
                     </div>
                 </div>
@@ -459,14 +459,14 @@
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <a href="{{ route('facilities.create') }}" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 100px;">
+                    <a href="{{ route('accessibilities.create') }}" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 100px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-lg mb-2">
                             <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
                             <line x1="8" y1="21" x2="16" y2="21" />
                             <line x1="12" y1="17" x2="12" y2="21" />
                         </svg>
-                        <div class="fw-bold">Tambah Fasilitas</div>
-                        <small class="text-secondary">Kelola fasilitas</small>
+                        <div class="fw-bold">Tambah Accessibility</div>
+                        <small class="text-secondary">Kelola Accessibility</small>
                     </a>
                 </div>
             </div>
@@ -651,7 +651,7 @@
                                         <line x1="12" y1="17" x2="12" y2="21" />
                                     </svg>
                                 </span>
-                                <div class="font-weight-medium">Fasilitas</div>
+                                <div class="font-weight-medium">Accessibility</div>
                             </div>
                         </td>
                         <td>{{ \App\Models\Facility::count() }}</td>
@@ -664,7 +664,7 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('facilities.index') }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('accessibilities.index') }}" class="btn btn-sm btn-outline-primary">
                                 Kelola
                             </a>
                         </td>

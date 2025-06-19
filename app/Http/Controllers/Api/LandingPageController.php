@@ -192,6 +192,37 @@ class LandingPageController extends Controller
     }
 
     /**
+     * Get accessibility items only
+     */
+    public function getAccessibilityPage()
+    {
+        try {
+            $accessibilities = Accessibility::ordered()->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Accessibilities retrieved successfully',
+                'data' => $accessibilities->map(function ($accessibility) {
+                    return [
+                        'id' => $accessibility->id,
+                        'name' => $accessibility->name,
+                        'description' => $accessibility->description,
+                        'image_url' => $accessibility->image_url,
+                        'order' => $accessibility->order,
+                    ];
+                })
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error retrieving accessibilities',
+                'data' => null
+            ], 500);
+        }
+    }
+
+    /**
      * Get concept page content
      */
     public function getConceptPage()
@@ -614,9 +645,9 @@ class LandingPageController extends Controller
     }
 
     /**
-     * Get facilities
+     * Get Accessibilities
      */
-    public function getFacilities()
+    public function getAccessibilities()
     {
         try {
             $accessibilities = Accessibility::active()->ordered()->get();

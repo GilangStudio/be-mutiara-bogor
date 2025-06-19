@@ -22,6 +22,9 @@ Route::prefix('v1')->group(function () {
     
     // Home Page
     Route::get('/home-page', [LandingPageController::class, 'getHomePage']);
+
+    // Concept Page
+    Route::get('/accessibility-page', [LandingPageController::class, 'getAccessibilityPage']);
     
     // Concept Page
     Route::get('/concept-page', [LandingPageController::class, 'getConceptPage']);
@@ -45,8 +48,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/{slug}', [LandingPageController::class, 'getNewsDetail']);
     });
     
-    // Facilities
-    Route::get('/facilities', [LandingPageController::class, 'getFacilities']);
+    // Accessibilities
+    Route::get('/accessibilities', [LandingPageController::class, 'getAccessibilities']);
     
     // FAQs
     Route::get('/faqs', [LandingPageController::class, 'getFaqs']);

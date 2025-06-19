@@ -117,6 +117,16 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{accessibility}', [AccessibilityController::class, 'update'])->name('update');
         Route::delete('/{accessibility}', [AccessibilityController::class, 'destroy'])->name('destroy');
         Route::post('/reorder', [AccessibilityController::class, 'reorder'])->name('reorder');
+
+        // Accessibility Page Routes
+        Route::prefix('page')->name('page.')->group(function () {
+            Route::post('/', [AccessibilityController::class, 'updatePage'])->name('update');
+        });
+        
+        // Banner Routes
+        Route::prefix('banners')->name('banners.')->group(function () {
+            Route::post('/reorder', [AccessibilityController::class, 'reorderBanners'])->name('reorder');
+        });
     });
 
     // FAQ Routes
