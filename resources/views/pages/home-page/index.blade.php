@@ -332,6 +332,9 @@
                     <a href="#hero-section" class="btn btn-outline-primary btn-sm">
                         <i class="ti ti-typography me-1"></i> Hero
                     </a>
+                    <a href="#brochure-section" class="btn btn-outline-primary btn-sm">
+                        <i class="ti ti-file-text me-1"></i> Brochure
+                    </a>
                     <a href="#about-section" class="btn btn-outline-primary btn-sm">
                         <i class="ti ti-info-circle me-1"></i> About
                     </a>
@@ -502,7 +505,120 @@
             </div>
 
             {{-- SEO Meta --}}
-            @include('components.seo-meta-form', ['data' => $homePage, 'type' => 'edit'])
+            @include('components.seo-meta-form', ['data' => $homePage, 'type' => is_null($homePage) ? 'create' : 'edit'])
+
+            {{-- Brochure Section --}}
+            <div class="card mt-3" id="brochure-section">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="ti ti-file-text me-2"></i>
+                        Brochure Section
+                    </h3>
+                    <div class="card-actions">
+                        <span class="badge bg-blue-lt">Optional</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {{-- Current Brochure Preview --}}
+                        @if($homePage && $homePage->brochure_file_url)
+                        <div class="col-12 mb-4">
+                            <label class="form-label text-secondary">Current Brochure</label>
+                            <div class="section-preview">
+                                <div class="d-flex align-items-center p-3 border rounded">
+                                    <div class="me-3">
+                                        <i class="ti ti-file-text text-red" style="font-size: 2.5rem;"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Project Brochure</h6>
+                                        <small class="text-secondary">PDF File</small>
+                                    </div>
+                                    <div>
+                                        <a href="{{ $homePage->brochure_file_url }}" target="_blank" class="btn btn-sm btn-outline-primary me-2">
+                                            <i class="ti ti-eye me-1"></i> View
+                                        </a>
+                                        <a href="{{ $homePage->brochure_file_url }}" download class="btn btn-sm btn-outline-success">
+                                            <i class="ti ti-download me-1"></i> Download
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Upload Brochure PDF</label>
+                                <input type="file" class="form-control @error('brochure_file') is-invalid @enderror" 
+                                    name="brochure_file" accept=".pdf" id="brochure-file">
+                                @error('brochure_file')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="form-hint">
+                                    @if($homePage && $homePage->brochure_file_url)
+                                        {{-- Kosongkan untuk tetap menggunakan brochure saat ini. --}}
+                                        Leave empty to keep current brochure
+                                    @endif
+                                    Upload a PDF brochure for the project. Maximum size: 20MB. Supported format: PDF
+                                </small>
+                                <div class="mt-2" id="brochure-file-preview"></div>
+                            </div>
+                            
+                            {{-- Brochure Description --}}
+                            {{-- <div class="mb-3">
+                                <div class="alert alert-info">
+                                    <div class="d-flex">
+                                        <div class="me-2">
+                                            <i class="ti ti-info-circle"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="alert-title">Tips Brochure</h4>
+                                            <div class="text-secondary">
+                                                Brochure akan ditampilkan sebagai download link di halaman home. 
+                                                Pastikan brochure berisi informasi lengkap tentang proyek seperti:
+                                                <ul class="mt-2 mb-0">
+                                                    <li>Denah dan spesifikasi unit</li>
+                                                    <li>Fasilitas dan lokasi</li>
+                                                    <li>Harga dan skema pembayaran</li>
+                                                    <li>Kontak dan informasi pengembang</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> --}}
+                        </div>
+                        
+                        {{-- <div class="col-lg-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="ti ti-file-text text-muted mb-3" style="font-size: 4rem;"></i>
+                                    <h5 class="card-title">Brochure Preview</h5>
+                                    <p class="text-secondary small">
+                                        Upload file PDF untuk preview brochure proyek Anda. 
+                                        Pengunjung dapat mengunduh brochure dari halaman home.
+                                    </p>
+                                    @if($homePage && $homePage->brochure_file_url)
+                                    <div class="mt-3">
+                                        <span class="badge bg-success-lt">
+                                            <i class="ti ti-check me-1"></i>
+                                            Brochure tersedia
+                                        </span>
+                                    </div>
+                                    @else
+                                    <div class="mt-3">
+                                        <span class="badge bg-warning-lt">
+                                            <i class="ti ti-alert-triangle me-1"></i>
+                                            Belum ada brochure
+                                        </span>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div> --}}
+                    </div>
+                </div>
+            </div>
 
             {{-- About Development Section --}}
             <div class="card mt-3" id="about-section">
@@ -1708,6 +1824,62 @@
         setupImagePreview('about-image', 'about-image-preview');
         setupImagePreview('features-image', 'features-image-preview');
         setupImagePreview('location-image', 'location-image-preview');
+
+        function setupPdfPreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            if (input && preview) {
+                input.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const maxSize = 20 * 1024 * 1024; // 20MB
+                        if (file.size > maxSize) {
+                            showAlert(input, 'danger', 'Ukuran file PDF terlalu besar. Maksimal 20MB diizinkan.');
+                            input.value = '';
+                            return;
+                        }
+
+                        if (file.type !== 'application/pdf') {
+                            showAlert(input, 'danger', 'Pilih file PDF yang valid.');
+                            input.value = '';
+                            return;
+                        }
+
+                        preview.innerHTML = `
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="ti ti-file-text text-red" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">${file.name}</h6>
+                                            <small class="text-secondary">
+                                                ${(file.size / 1024 / 1024).toFixed(2)} MB • PDF File
+                                            </small>
+                                            <div class="mt-2">
+                                                <small class="text-success">
+                                                    <i class="ti ti-check me-1"></i>
+                                                    Ready to upload
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearPreview('${inputId}', '${previewId}')">
+                                            <i class="ti ti-x"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        preview.innerHTML = '';
+                    }
+                });
+            }
+        }
+
+        setupPdfPreview('brochure-file', 'brochure-file-preview');
 
         // Form submission loading state
         const form = document.getElementById('home-page-form');

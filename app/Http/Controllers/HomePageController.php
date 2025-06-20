@@ -52,6 +52,7 @@ class HomePageController extends Controller
             'location_image_alt_text' => 'nullable|string|max:255',
             'location_link_text' => 'nullable|string|max:100',
             'location_link_url' => 'nullable|url|max:255',
+            'brochure_file' => 'nullable|mimes:pdf|max:20480',
         ], [
             'banner_type.required' => 'Banner type is required',
             'banner_image.image' => 'Banner must be an image file',
@@ -75,6 +76,8 @@ class HomePageController extends Controller
             'location_image.required' => 'Location section image is required',
             'location_image.image' => 'Location image must be an image file',
             'location_image.max' => 'Location image size cannot exceed 5MB',
+            'brochure_file.mimes' => 'Brochure file must be PDF format',
+            'brochure_file.max' => 'Brochure file size cannot exceed 20MB',
         ]);
 
         try {
@@ -115,6 +118,11 @@ class HomePageController extends Controller
                 1200
             );
 
+            $brochureFilePath = null;
+            if ($request->hasFile('brochure_file')) {
+                $brochureFilePath = $request->file('brochure_file')->store('home-page/brochure', 'public');
+            }
+
             HomePageSetting::create([
                 'banner_type' => $request->banner_type,
                 'banner_image_path' => $bannerImagePath,
@@ -143,6 +151,7 @@ class HomePageController extends Controller
                 'location_image_alt_text' => $request->location_image_alt_text,
                 'location_link_text' => $request->location_link_text ?: 'Get Direction',
                 'location_link_url' => $request->location_link_url,
+                'brochure_file_path' => $brochureFilePath,
                 'is_active' => $request->has('status')
             ]);
 
@@ -196,6 +205,7 @@ class HomePageController extends Controller
             'location_image_alt_text' => 'nullable|string|max:255',
             'location_link_text' => 'nullable|string|max:100',
             'location_link_url' => 'nullable|url|max:255',
+            'brochure_file' => 'nullable|mimes:pdf|max:20480',
         ]);
 
         try {
@@ -262,6 +272,17 @@ class HomePageController extends Controller
                 1200
             );
 
+            $brochureFilePath = $homePage->brochure_file_path;
+
+            if ($request->hasFile('brochure_file')) {
+                // Delete old brochure if exists
+                if ($brochureFilePath) {
+                    ImageService::deleteFile($brochureFilePath);
+                }
+                // Upload new brochure
+                $brochureFilePath = $request->file('brochure_file')->store('home-page/brochure', 'public');
+            }
+
             $homePage->update([
                 'banner_type' => $request->banner_type,
                 'banner_image_path' => $bannerImagePath,
@@ -293,6 +314,7 @@ class HomePageController extends Controller
                 'location_image_alt_text' => $request->location_image_alt_text,
                 'location_link_text' => $request->location_link_text ?: 'Get Direction',
                 'location_link_url' => $request->location_link_url,
+                'brochure_file_path' => $brochureFilePath,
                 'is_active' => $request->has('status')
             ]);
 
@@ -322,7 +344,8 @@ class HomePageController extends Controller
                 $homePage->banner_video_path,
                 $homePage->about_image_path,
                 $homePage->features_image_path,
-                $homePage->location_image_path
+                $homePage->location_image_path,
+                $homePage->brochure_file_path,
             ]);
 
             $homePage->delete();

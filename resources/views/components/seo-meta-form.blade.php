@@ -4,12 +4,12 @@
     <div class="card-header">
         <h3 class="card-title">
             <i class="ti ti-seo me-2"></i>
-            SEO Meta (Opsional)
+            SEO Meta (Optional)
         </h3>
         <div class="card-actions">
             <span class="badge bg-blue-lt">
                 <i class="ti ti-info-circle me-1"></i>
-                Digunakan untuk optimasi mesin pencari
+                Used for search engine optimization
             </span>
         </div>
     </div>
@@ -68,7 +68,7 @@
     <div class="card-header">
         <h3 class="card-title">
             <i class="ti ti-seo me-2"></i>
-            SEO Meta (Opsional)
+            SEO Meta (Optional)
         </h3>
     </div>
     <div class="card-body">
@@ -78,7 +78,7 @@
                     <label class="form-label">Meta Title</label>
                     <input type="text" class="form-control @error('meta_title') is-invalid @enderror" 
                            name="meta_title" value="{{ old('meta_title', $data->meta_title) }}" 
-                           placeholder="Judul yang akan muncul di hasil pencarian Google"
+                           placeholder="Enter title that will appear in search results"
                            maxlength="255" id="meta-title-input">
                     @error('meta_title')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -93,7 +93,7 @@
                     <label class="form-label">Meta Description</label>
                     <textarea class="form-control @error('meta_description') is-invalid @enderror" 
                               name="meta_description" rows="3" 
-                              placeholder="Deskripsi yang akan muncul di hasil pencarian Google"
+                              placeholder="Enter description that will appear in search results"
                               maxlength="500" id="meta-desc-input">{{ old('meta_description', $data->meta_description) }}</textarea>
                     @error('meta_description')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -108,7 +108,7 @@
                     <label class="form-label">Meta Keywords</label>
                     <input type="text" class="form-control @error('meta_keywords') is-invalid @enderror" 
                            name="meta_keywords" value="{{ old('meta_keywords', $data->meta_keywords) }}" 
-                           placeholder="kata kunci, properti, perumahan, Jakarta"
+                           placeholder="keywords separated by commas. e.g: property, house, Jakarta, residence"
                            maxlength="255" id="meta-keywords-input">
                     @error('meta_keywords')
                         <div class="invalid-feedback">{{ $message }}</div>

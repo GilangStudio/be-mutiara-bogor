@@ -53,6 +53,11 @@ class HomePageSetting extends Model
         return $this->meta_keywords ?: '';
     }
 
+    public function getBrochureFileUrlAttribute()
+    {
+        return $this->brochure_file_path ? asset('storage/' . $this->brochure_file_path) : null;
+    }
+
     // Scopes
     public function scopeActive($query)
     {
@@ -69,5 +74,10 @@ class HomePageSetting extends Model
     public function getIsBannerVideoAttribute()
     {
         return $this->banner_type === 'video';
+    }
+
+    public function getHasBrochureAttribute()
+    {
+        return !empty($this->brochure_file_path);
     }
 }
