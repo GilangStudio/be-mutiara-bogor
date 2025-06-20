@@ -12,7 +12,7 @@
             <a href="." aria-label="Tabler"><img src="/logo.png" alt="" class="navbar-brand-image"></a>
         </div>
         <!-- END NAVBAR LOGO -->
-        <div class="navbar-nav flex-row d-lg-none">
+        {{-- <div class="navbar-nav flex-row d-lg-none">
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown" aria-label="Open user menu">
                     <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)"> </span>
@@ -30,7 +30,7 @@
                     <a href="./sign-in.html" class="dropdown-item">Logout</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="collapse navbar-collapse" id="sidebar-menu">
             <!-- BEGIN NAVBAR MENU -->
             <ul class="navbar-nav pt-lg-3">
@@ -91,26 +91,32 @@
                         <span class="nav-link-title"> News </span>
                     </a>
                 </li>
-                <li class="nav-item dropdown active">
+                <li class="nav-item dropdown {{ Route::is('crm.*') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="false"
                         role="button" aria-expanded="false">
                         <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-components fs-2"></i></span>
                         <span class="nav-link-title"> CRM </span>
                     </a>
-                    <div class="dropdown-menu show">
+                    <div class="dropdown-menu {{ Route::is('crm.*') ? 'show' : '' }}">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
-                                <a class="dropdown-item"
-                                    href="#">
+                                <a class="dropdown-item {{ Route::is('crm.platform.*') ? 'active' : '' }}"
+                                    href="{{ route('crm.platform.index') }}">
+                                    Platform
+                                </a>
+                                <a class="dropdown-item {{ Route::is('crm.sales.*') ? 'active' : '' }}"
+                                    href="{{ route('crm.sales.index') }}">
                                     Sales
                                 </a>
-                                <a class="dropdown-item"
-                                    href="#">
+                                <a class="dropdown-item {{ Route::is('crm.leads.*') ? 'active' : '' }}"
+                                    href="{{ route('crm.leads.index') }}">
                                     Leads
-                                </a>
-                                <a class="dropdown-item"
-                                    href="#">
-                                    Platforms
+                                    @php
+                                        $newLeadsCount = \App\Models\Lead::getNewLeadsCount();
+                                    @endphp
+                                    @if($newLeadsCount > 0)
+                                        <span class="badge bg-red text-white ms-2">{{ $newLeadsCount }}</span>
+                                    @endif
                                 </a>
                             </div>
                         </div>

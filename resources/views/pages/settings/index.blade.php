@@ -32,187 +32,185 @@
 </div>
 @endif
 
-<div class="row g-3">
-    {{-- Profile Section --}}
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="ti ti-user me-2"></i>
-                    Profile Information
-                </h3>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('settings.profile.update') }}" method="POST" id="profile-form">
-                    @csrf
-                    @method('PUT')
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                               name="name" value="{{ old('name', auth()->user()->name) }}" required>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Username <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('username') is-invalid @enderror" 
-                               name="username" value="{{ old('username', auth()->user()->username) }}" required>
-                        @error('username')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Email <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                               name="email" value="{{ old('email', auth()->user()->email) }}" required>
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="ti ti-check me-1"></i> Save Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
+{{-- Profile Section --}}
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-user me-2"></i>
+                Profile Information
+            </h3>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('settings.profile.update') }}" method="POST" id="profile-form">
+                @csrf
+                @method('PUT')
+                
+                <div class="mb-3">
+                    <label class="form-label">Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                            name="name" value="{{ old('name', auth()->user()->name) }}" required>
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Username <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('username') is-invalid @enderror" 
+                            name="username" value="{{ old('username', auth()->user()->username) }}" required>
+                    @error('username')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                            name="email" value="{{ old('email', auth()->user()->email) }}" required>
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-check me-1"></i> Save Changes
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    {{-- Password Section --}}
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="ti ti-lock me-2"></i>
-                    Change Password
-                </h3>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('settings.password.update') }}" method="POST" id="password-form">
-                    @csrf
-                    @method('PUT')
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Current Password <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <input type="password" class="form-control @error('current_password') is-invalid @enderror" 
-                                   name="current_password" id="current_password" required>
-                            <button type="button" class="btn btn-outline-secondary toggle-password" 
-                                    data-target="current_password">
-                                <i class="ti ti-eye" id="current_password_icon"></i>
-                            </button>
-                        </div>
-                        @error('current_password')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">New Password <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                   name="password" id="password" required>
-                            <button type="button" class="btn btn-outline-secondary toggle-password" 
-                                    data-target="password">
-                                <i class="ti ti-eye" id="password_icon"></i>
-                            </button>
-                        </div>
-                        @error('password')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                        <small class="form-hint">Minimum 8 characters</small>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Confirm New Password <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" 
-                                   name="password_confirmation" id="password_confirmation" required>
-                            <button type="button" class="btn btn-outline-secondary toggle-password" 
-                                    data-target="password_confirmation">
-                                <i class="ti ti-eye" id="password_confirmation_icon"></i>
-                            </button>
-                        </div>
-                        @error('password_confirmation')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-warning">
-                            <i class="ti ti-key me-1"></i> Change Password
-                        </button>
-                        <button type="button" class="btn btn-light" id="reset-password-form">
-                            <i class="ti ti-refresh me-1"></i> Reset
+{{-- Password Section --}}
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-lock me-2"></i>
+                Change Password
+            </h3>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('settings.password.update') }}" method="POST" id="password-form">
+                @csrf
+                @method('PUT')
+                
+                <div class="mb-3">
+                    <label class="form-label">Current Password <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="password" class="form-control @error('current_password') is-invalid @enderror" 
+                                name="current_password" id="current_password" required>
+                        <button type="button" class="btn btn-outline-secondary toggle-password" 
+                                data-target="current_password">
+                            <i class="ti ti-eye" id="current_password_icon"></i>
                         </button>
                     </div>
-                </form>
-            </div>
+                    @error('current_password')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">New Password <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                name="password" id="password" required>
+                        <button type="button" class="btn btn-outline-secondary toggle-password" 
+                                data-target="password">
+                            <i class="ti ti-eye" id="password_icon"></i>
+                        </button>
+                    </div>
+                    @error('password')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                    <small class="form-hint">Minimum 8 characters</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Confirm New Password <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" 
+                                name="password_confirmation" id="password_confirmation" required>
+                        <button type="button" class="btn btn-outline-secondary toggle-password" 
+                                data-target="password_confirmation">
+                            <i class="ti ti-eye" id="password_confirmation_icon"></i>
+                        </button>
+                    </div>
+                    @error('password_confirmation')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="ti ti-key me-1"></i> Change Password
+                    </button>
+                    <button type="button" class="btn btn-light" id="reset-password-form">
+                        <i class="ti ti-refresh me-1"></i> Reset
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    {{-- Account Info Section --}}
-    {{-- <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="ti ti-info-circle me-2"></i>
-                    Account Information
-                </h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Last Login:</label>
-                            <div class="text-muted">
-                                @if(auth()->user()->last_login_at)
-                                    {{ auth()->user()->last_login_at->format('d M Y, H:i') }}
-                                @else
-                                    Never logged in
-                                @endif
-                            </div>
+{{-- Account Info Section --}}
+{{-- <div class="col-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-info-circle me-2"></i>
+                Account Information
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Last Login:</label>
+                        <div class="text-muted">
+                            @if(auth()->user()->last_login_at)
+                                {{ auth()->user()->last_login_at->format('d M Y, H:i') }}
+                            @else
+                                Never logged in
+                            @endif
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Account Created:</label>
-                            <div class="text-muted">
-                                {{ auth()->user()->created_at->format('d M Y, H:i') }}
-                            </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Account Created:</label>
+                        <div class="text-muted">
+                            {{ auth()->user()->created_at->format('d M Y, H:i') }}
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Last Updated:</label>
-                            <div class="text-muted">
-                                {{ auth()->user()->updated_at->format('d M Y, H:i') }}
-                            </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Last Updated:</label>
+                        <div class="text-muted">
+                            {{ auth()->user()->updated_at->format('d M Y, H:i') }}
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Email Status:</label>
-                            <div class="text-muted">
-                                @if(auth()->user()->email_verified_at)
-                                    <span class="badge bg-green-lt">Verified</span>
-                                @else
-                                    <span class="badge bg-yellow-lt">Not Verified</span>
-                                @endif
-                            </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email Status:</label>
+                        <div class="text-muted">
+                            @if(auth()->user()->email_verified_at)
+                                <span class="badge bg-green-lt">Verified</span>
+                            @else
+                                <span class="badge bg-yellow-lt">Not Verified</span>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div> --}}
-</div>
+    </div>
+</div> --}}
 
 @endsection
 

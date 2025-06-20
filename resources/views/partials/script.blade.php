@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <!-- END PAGE LIBRARIES -->
 <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-<script src="{{ asset('js/tabler.min.js') }}" defer></script>
+{{-- <script src="{{ asset('js/tabler.min.js') }}" defer></script> --}}
 <!-- END GLOBAL MANDATORY SCRIPTS -->
 
 
@@ -1153,5 +1153,5 @@
 </script>
 <!-- END PAGE SCRIPTS -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 @stack('scripts')

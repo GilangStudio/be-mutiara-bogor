@@ -3,11 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FaqsController;
+use App\Http\Controllers\LeadController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\ConceptPageController;
 use App\Http\Controllers\HomeFeatureController;
 use App\Http\Controllers\AccessibilityController;
@@ -107,6 +110,38 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{news}/edit', [NewsController::class, 'edit'])->name('edit');
         Route::put('/{news}', [NewsController::class, 'update'])->name('update');
         Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('crm')->name('crm.')->group(function () {
+        // Platform Routes
+        Route::prefix('platform')->name('platform.')->group(function () {
+            Route::get('/', [PlatformController::class, 'index'])->name('index');
+            Route::post('/', [PlatformController::class, 'store'])->name('store');
+            Route::put('/{platform}', [PlatformController::class, 'update'])->name('update');
+            Route::delete('/{platform}', [PlatformController::class, 'destroy'])->name('destroy');
+        });
+
+        // Sales Routes
+        Route::prefix('sales')->name('sales.')->group(function () {
+            Route::get('/', [SalesController::class, 'index'])->name('index');
+            Route::get('/create', [SalesController::class, 'create'])->name('create');
+            Route::post('/', [SalesController::class, 'store'])->name('store');
+            Route::get('/{sales}/edit', [SalesController::class, 'edit'])->name('edit');
+            Route::put('/{sales}', [SalesController::class, 'update'])->name('update');
+            Route::delete('/{sales}', [SalesController::class, 'destroy'])->name('destroy');
+            Route::patch('/{sales}/activate', [SalesController::class, 'activate'])->name('activate');
+        });
+
+        // Leads Routes
+        Route::prefix('leads')->name('leads.')->group(function () {
+            Route::get('/', [LeadController::class, 'index'])->name('index');
+            Route::get('/create', [LeadController::class, 'create'])->name('create');
+            Route::post('/', [LeadController::class, 'store'])->name('store');
+            Route::get('/{lead}/edit', [LeadController::class, 'edit'])->name('edit');
+            Route::put('/{lead}', [LeadController::class, 'update'])->name('update');
+            Route::delete('/{lead}', [LeadController::class, 'destroy'])->name('destroy');
+            Route::patch('/{lead}/status', [LeadController::class, 'changeStatus'])->name('change-status');
+        });
     });
 
     Route::prefix('accessibility')->name('accessibilities.')->group(function () {
