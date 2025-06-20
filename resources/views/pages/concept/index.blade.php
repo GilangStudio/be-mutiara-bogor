@@ -216,7 +216,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Meta Title</label>
                                         <input type="text" class="form-control @error('meta_title') is-invalid @enderror" 
-                                               name="meta_title" value="{{ old('meta_title', $conceptPage->meta_title) }}" 
+                                               name="meta_title" value="{{ old('meta_title', $conceptPage->meta_title ?? '') }}" 
                                                placeholder="Enter title that will appear in search results"
                                                maxlength="255" id="meta-title-input">
                                         @error('meta_title')
@@ -233,7 +233,7 @@
                                         <textarea class="form-control @error('meta_description') is-invalid @enderror" 
                                                   name="meta_description" rows="3" 
                                                   placeholder="Enter description that will appear in search results"
-                                                  maxlength="500" id="meta-desc-input">{{ old('meta_description', $conceptPage->meta_description) }}</textarea>
+                                                  maxlength="500" id="meta-desc-input">{{ old('meta_description', $conceptPage->meta_description ?? '') }}</textarea>
                                         @error('meta_description')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -246,7 +246,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Meta Keywords</label>
                                         <input type="text" class="form-control @error('meta_keywords') is-invalid @enderror" 
-                                               name="meta_keywords" value="{{ old('meta_keywords', $conceptPage->meta_keywords) }}" 
+                                               name="meta_keywords" value="{{ old('meta_keywords', $conceptPage->meta_keywords ?? '') }}" 
                                                placeholder="keywords separated by commas. e.g: property, house, Jakarta, residence"
                                                maxlength="255" id="meta-keywords-input">
                                         @error('meta_keywords')

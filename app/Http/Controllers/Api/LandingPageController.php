@@ -18,6 +18,7 @@ use App\Models\ContactMessage;
 use App\Models\HomePageSetting;
 use App\Models\ProjectCategory;
 use App\Models\HomeFeaturedUnit;
+use App\Models\AccessibilityPage;
 use App\Models\ConceptPageSection;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -194,29 +195,64 @@ class LandingPageController extends Controller
     /**
      * Get accessibility items only
      */
+    /**
+     * Get accessibility page content
+     */
     public function getAccessibilityPage()
     {
         try {
-            $accessibilities = Accessibility::ordered()->get();
+            $accessibilityPage = AccessibilityPage::with(['bannerImages' => function($query) {
+                $query->ordered();
+            }])->first();
+            
+            $accessibilities = Accessibility::active()->ordered()->get();
+
+            if (!$accessibilityPage) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Accessibility tidak ditemukan',
+                    'data' => null
+                ], 404);
+            }
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Accessibilities retrieved successfully',
-                'data' => $accessibilities->map(function ($accessibility) {
-                    return [
-                        'id' => $accessibility->id,
-                        'name' => $accessibility->name,
-                        'description' => $accessibility->description,
-                        'image_url' => $accessibility->image_url,
-                        'order' => $accessibility->order,
-                    ];
-                })
+                'message' => 'Accessibility page berhasil diambil',
+                'data' => [
+                    'page' => [
+                        'id' => $accessibilityPage->id,
+                        'title' => $accessibilityPage->title,
+                        'description' => $accessibilityPage->description,
+                        'meta_title' => $accessibilityPage->meta_title,
+                        'meta_description' => $accessibilityPage->meta_description,
+                        'meta_keywords' => $accessibilityPage->meta_keywords,
+                        'is_active' => $accessibilityPage->is_active,
+                    ],
+                    'banner_images' => $accessibilityPage->bannerImages->map(function ($banner) {
+                        return [
+                            'id' => $banner->id,
+                            'image_url' => $banner->image_url,
+                            'alt_text' => $banner->alt_text,
+                            'caption' => $banner->caption,
+                            'order' => $banner->order,
+                        ];
+                    }),
+                    'accessibilities' => $accessibilities->map(function ($accessibility) {
+                        return [
+                            'id' => $accessibility->id,
+                            'name' => $accessibility->name,
+                            'description' => $accessibility->description,
+                            'image_url' => $accessibility->image_url,
+                            'order' => $accessibility->order,
+                        ];
+                    })
+                ]
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Error retrieving accessibilities',
+                'message' => 'Terjadi kesalahan saat mengambil data accessibility page',
                 'data' => null
             ], 500);
         }

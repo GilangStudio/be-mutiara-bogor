@@ -20,7 +20,7 @@ class AuthController extends Controller
            'password' => 'required',
        ]);
 
-       if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
+       if (Auth::attempt(['username' => $request->username, 'password' => $request->password, 'role' => 'superadmin'])) {
            return redirect()->route('dashboard');
        }
 

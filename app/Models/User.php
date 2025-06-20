@@ -46,4 +46,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function scopeSuperadmin($query)
+    {
+        return $query->where('role', 'superadmin');
+    }
+
+    public function scopeSales($query)
+    {
+        return $query->where('role','sales');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('is_active', 0);
+    }
 }

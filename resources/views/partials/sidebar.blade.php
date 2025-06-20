@@ -91,6 +91,31 @@
                         <span class="nav-link-title"> News </span>
                     </a>
                 </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="false"
+                        role="button" aria-expanded="false">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-folder fs-2"></i></span>
+                        <span class="nav-link-title"> CRM </span>
+                    </a>
+                    <div class="dropdown-menu show">
+                        <div class="dropdown-menu-columns">
+                            <div class="dropdown-menu-column">
+                                <a class="dropdown-item"
+                                    href="#">
+                                    Sales
+                                </a>
+                                <a class="dropdown-item"
+                                    href="#">
+                                    Leads
+                                </a>
+                                <a class="dropdown-item"
+                                    href="#">
+                                    Leads
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
                 <li class="nav-item {{ Route::is('contact-messages.*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('contact-messages.index') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">

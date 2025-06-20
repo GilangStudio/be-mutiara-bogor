@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
+
+            $table->string('brochure_file_path')->nullable();
             
             // About Development Section
             $table->string('about_section_title')->default('About The Development');
