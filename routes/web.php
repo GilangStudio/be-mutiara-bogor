@@ -133,6 +133,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Leads Routes
+        // Leads Routes
         Route::prefix('leads')->name('leads.')->group(function () {
             Route::get('/', [LeadController::class, 'index'])->name('index');
             Route::get('/create', [LeadController::class, 'create'])->name('create');
@@ -141,6 +142,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{lead}', [LeadController::class, 'update'])->name('update');
             Route::delete('/{lead}', [LeadController::class, 'destroy'])->name('destroy');
             Route::patch('/{lead}/status', [LeadController::class, 'changeStatus'])->name('change-status');
+            Route::post('/bulk-action', [LeadController::class, 'bulkAction'])->name('bulk-action');
         });
     });
 

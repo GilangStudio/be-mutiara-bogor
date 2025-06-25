@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\LeadsController;
 use App\Http\Controllers\Api\LandingPageController;
 
 /*
@@ -57,4 +59,23 @@ Route::prefix('v1')->group(function () {
     // Contact Form - Only POST method for submitting
     Route::post('/contact', [LandingPageController::class, 'submitContact']);
     
+});
+
+Route::post('/login', [AuthController::class, 'login']);
+
+// Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['name' => 'auth:api'], function () {
+    Route::post('/update_password', [AuthController::class, 'update_password']);
+
+    Route::get('/get_statistics', [LeadsController::class, 'get_statistics']);
+    Route::post('/toggle_favorite', [LeadsController::class, 'toggle_favorite']);
+    Route::put('/update_lead/{id}', [LeadsController::class, 'update_lead']);
+    Route::post('/change_status/{id}', [LeadsController::class, 'change_status']);
+    Route::get('/get_leads', [LeadsController::class, 'get_leads']);
+    Route::get('/leads/{id}', [LeadsController::class, 'get_leads_detail']);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/user/update', [AuthController::class, 'update']);
+    Route::post('/update_token', [AuthController::class, 'update_token']);
 });

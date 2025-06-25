@@ -77,6 +77,11 @@ class Lead extends Model
                     ->whereYear('created_at', now()->year);
     }
 
+    public function setStatusAttribute($value)
+    {
+        $this->attributes['status'] = strtoupper($value);
+    }
+
     // Accessors
     public function getStatusTextAttribute()
     {
