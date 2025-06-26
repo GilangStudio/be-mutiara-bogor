@@ -282,6 +282,33 @@
                     </div>
                 </div>
                 <div class="mb-2">
+                    <small class="text-secondary">Recontact Status:</small>
+                    <div>
+                        @if($lead->recontact_count > 0)
+                            <span class="badge bg-orange-lt">
+                                {{ $lead->recontact_count === 1 ? 'Recontact' : "Recontact ({$lead->recontact_count}x)" }}
+                            </span>
+                            @php
+                                $isRecent = $lead->last_contact_at && 
+                                           \Carbon\Carbon::parse($lead->last_contact_at)->isAfter(now()->subHours(24));
+                            @endphp
+                            @if($isRecent)
+                                <span class="badge bg-red-lt ms-1">Recent</span>
+                            @endif
+                        @else
+                            <span class="badge bg-blue-lt">New Lead</span>
+                        @endif
+                    </div>
+                </div>
+                
+                @if($lead->recontact_count > 0 && $lead->last_contact_at)
+                <div class="mb-2">
+                    <small class="text-secondary">Last Contact:</small>
+                    <div>{{ \Carbon\Carbon::parse($lead->last_contact_at)->format('d M Y, H:i') }}</div>
+                    <small class="text-secondary">{{ \Carbon\Carbon::parse($lead->last_contact_at)->diffForHumans() }}</small>
+                </div>
+                @endif
+                <div class="mb-2">
                     <small class="text-secondary">Created At:</small>
                     <div>{{ $lead->created_at->format('d M Y, H:i') }}</div>
                 </div>

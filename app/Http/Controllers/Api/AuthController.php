@@ -30,14 +30,14 @@ class AuthController extends Controller {
                 //generate api token random string
                 $token = Str::random(60);
 
-                if ($request->token) {
-                    //check fcm_token if same with $request->token in sales if exist set to null
-                    Sales::where('fcm_token', $request->token)->update(['fcm_token' => null]);
+                if ($request->fcm_token) {
+                    //check fcm_token if same with $request->fcm_token in sales if exist set to null
+                    Sales::where('fcm_token', $request->fcm_token)->update(['fcm_token' => null]);
                 }
 
                 $sales->update([
                     'api_token' => $token,
-                    'fcm_token' => $request->token
+                    'fcm_token' => $request->fcm_token
                 ]);
                 //remove key value updated_at in sales table object
                 unset($sales->updated_at);
@@ -82,7 +82,7 @@ class AuthController extends Controller {
 
     public function update_token(Request $request) {
         $sales = Sales::where('api_token', request()->bearerToken())->whereNotNull('api_token')->active()->first();
-        $sales->update(['fcm_token' => $request->token]);
+        $sales->update(['fcm_token' => $request->fcm_token]);
         return response()->json([
             'status' => 'success'
         ]);

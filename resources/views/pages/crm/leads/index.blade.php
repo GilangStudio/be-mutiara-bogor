@@ -179,6 +179,27 @@
         </div>
     </div>
 </div>
+<div class="col-sm-6 col-lg-3">
+    <div class="card card-sm">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <span class="bg-orange text-white avatar">
+                        <i class="ti ti-repeat"></i>
+                    </span>
+                </div>
+                <div class="col">
+                    <div class="font-weight-medium">
+                        {{ \App\Models\Lead::getRecontactLeadsCount() }}
+                    </div>
+                    <div class="text-secondary">
+                        Recontact Leads
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{-- Search and Filter Form --}}
 <div class="col-12">
@@ -199,7 +220,7 @@
             </div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <div class="input-icon">
                             <span class="input-icon-addon">
                                 <i class="ti ti-search"></i>
@@ -233,6 +254,17 @@
                                 {{ $platform->platform_name }}
                             </option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" name="has_recontact" id="recontact-filter">
+                            <option value="">Semua Lead</option>
+                            <option value="true" {{ request('has_recontact') === 'true' ? 'selected' : '' }}>
+                                Dengan Recontact
+                            </option>
+                            <option value="false" {{ request('has_recontact') === 'false' ? 'selected' : '' }}>
+                                Tanpa Recontact
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -270,7 +302,7 @@
                 </div>
                 
                 {{-- Active Filters Display --}}
-                @if(request()->hasAny(['search', 'status', 'platform_id', 'sales_id', 'assignment_type', 'date_from', 'date_to']))
+                @if(request()->hasAny(['search', 'status', 'platform_id', 'has_recontact', 'sales_id', 'assignment_type', 'date_from', 'date_to']))
                 <div class="mt-3 d-flex gap-2 align-items-center flex-wrap">
                     <small class="text-secondary">Filter aktif:</small>
                     @if(request('search'))
@@ -318,6 +350,12 @@
                     <span class="badge bg-red-lt filter-badge">
                         <i class="ti ti-calendar me-1"></i>
                         Tanggal: {{ request('date_from') ?? '...' }} - {{ request('date_to') ?? '...' }}
+                    </span>
+                    @endif
+                    @if(request('has_recontact'))
+                    <span class="badge bg-orange-lt filter-badge">
+                        <i class="ti ti-repeat me-1"></i>
+                        Recontact: {{ request('has_recontact') === 'true' ? 'Dengan Recontact' : 'Tanpa Recontact' }}
                     </span>
                     @endif
                 </div>
@@ -412,7 +450,20 @@
                                         <i class="ti ti-user"></i>
                                     </div>
                                     <div>
-                                        <div class="fw-bold" data-searchable="name">{{ $lead->name }}</div>
+                                        <div class="fw-bold" data-searchable="name">
+                                            {{ $lead->name }}
+                                            @if($lead->recontact_count > 0)
+                                                @php
+                                                    $recontactLabel = $lead->recontact_count === 1 ? 'Recontact' : "Recontact ({$lead->recontact_count}x)";
+                                                    $isRecent = $lead->last_contact_at && 
+                                                            \Carbon\Carbon::parse($lead->last_contact_at)->isAfter(now()->subHours(24));
+                                                @endphp
+                                                <span class="badge bg-orange-lt ms-2">{{ $recontactLabel }}</span>
+                                                @if($isRecent)
+                                                    <span class="badge bg-red-lt ms-1">🔥 Recent</span>
+                                                @endif
+                                            @endif
+                                        </div>
                                         <div class="text-secondary small" data-searchable="phone">
                                             @if($lead->phone)
                                                 <i class="ti ti-phone me-1"></i>{{ $lead->phone }}
@@ -426,6 +477,11 @@
                                         @if($lead->message)
                                         <div class="text-secondary small" data-searchable="message">
                                             <i class="ti ti-message me-1"></i>{{ Str::limit($lead->message, 50) }}
+                                        </div>
+                                        @endif
+                                        @if($lead->recontact_count > 0 && $lead->last_contact_at)
+                                        <div class="text-secondary small">
+                                            <i class="ti ti-clock me-1"></i>Last contact: {{ \Carbon\Carbon::parse($lead->last_contact_at)->diffForHumans() }}
                                         </div>
                                         @endif
                                     </div>
@@ -612,6 +668,7 @@
         const filterForm = document.getElementById('filter-form');
         const searchInput = document.getElementById('search-input');
         const statusFilter = document.getElementById('status-filter');
+        const recontactFilter = document.getElementById('recontact-filter');
         const platformFilter = document.getElementById('platform-filter');
         const salesFilter = document.getElementById('sales-filter');
         const assignmentFilter = document.getElementById('assignment-filter');
@@ -629,7 +686,7 @@
         });
         
         // Filter change events (immediate submit)
-        [statusFilter, platformFilter, salesFilter, assignmentFilter].forEach(filter => {
+        [statusFilter, platformFilter, recontactFilter, salesFilter, assignmentFilter].forEach(filter => {
             filter.addEventListener('change', function() {
                 submitFilter();
             });

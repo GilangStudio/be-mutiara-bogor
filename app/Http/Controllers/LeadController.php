@@ -8,11 +8,22 @@ use App\Enum\LeadStatus;
 use App\Models\Platform;
 use App\Models\HistoryLeads;
 use Illuminate\Http\Request;
+use App\Services\LeadsService;
 use App\Models\HistoryMoveLeads;
 use Illuminate\Support\Facades\Auth;
+use App\Services\NotificationFirebaseService;
 
 class LeadController extends Controller
 {
+    protected $leadsService;
+    protected $notificationFirebaseService;
+
+    public function __construct(LeadsService $leadsService, NotificationFirebaseService $notificationFirebaseService)
+    {
+        $this->leadsService = $leadsService;
+        $this->notificationFirebaseService = $notificationFirebaseService;
+    }
+
     public function index(Request $request)
     {
         $query = Lead::with(['platform', 'historyLead.sales']);
@@ -54,6 +65,14 @@ class LeadController extends Controller
                 $q->where('is_automatic', $assignmentType);
             });
         }
+
+        if ($request->filled('has_recontact')) {
+            if ($request->boolean('has_recontact')) {
+                $query->where('recontact_count', '>', 0);
+            } else {
+                $query->where('recontact_count', '=', 0);
+            }
+        }
         
         // Date range filter
         if ($request->filled('date_from')) {
@@ -74,9 +93,12 @@ class LeadController extends Controller
         }
         
         // Order by latest
-        $leads = $query->orderBy('created_at', 'desc')
-                      ->paginate(20)
-                      ->appends($request->query());
+        $leads = $query
+        // ->orderByRaw('CASE WHEN recontact_count > 0 THEN 0 ELSE 1 END')
+                  ->orderBy('last_contact_at', 'desc')
+                  ->orderBy('created_at', 'desc')
+                  ->paginate(20)
+                  ->appends($request->query());
         
         // Get filter options
         $platforms = Platform::orderBy('platform_name')->get();
@@ -131,7 +153,7 @@ class LeadController extends Controller
         try {
             // Determine sales assignment
             if ($request->sales_assignment === 'auto') {
-                $salesId = $this->getNextSalesId();
+                $salesId = $this->leadsService->getNextSalesId();
             } else {
                 $salesId = $request->sales_id;
                 
@@ -231,7 +253,10 @@ class LeadController extends Controller
                     'to_sales_id' => $request->sales_id
                 ]);
 
+                $sales = Sales::where('id', $request->sales_id)->first();
+
                 // TODO: Send notification to new sales
+                $this->notificationFirebaseService->sendLeadAssignmentNotification($sales, $lead);
             }
 
             // Update lead data
@@ -280,10 +305,17 @@ class LeadController extends Controller
         ]);
 
         try {
+            $oldStatus = $lead->status;
+            $newStatus = $request->status;
+
             $lead->update([
-                'status' => $request->status,
+                'status' => $newStatus,
                 'updated_by' => Auth::id()
             ]);
+
+            $sales = Sales::where('id', $lead->historyLead->sales_id)->first();
+
+            $this->notificationFirebaseService->sendStatusChangeNotification($sales, $lead, $oldStatus, $newStatus);
 
             return redirect()->route('crm.leads.edit', $lead)
                            ->with('success', 'Lead status updated successfully');
@@ -436,42 +468,5 @@ class LeadController extends Controller
             return redirect()->route('crm.leads.index')
                            ->with('error', 'Bulk action failed: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Get next sales ID for automatic assignment
-     */
-    private function getNextSalesId()
-    {
-        $maxOrder = Sales::where('is_active', true)->max('order');
-        
-        if (!$maxOrder) {
-            throw new \Exception('No active sales available');
-        }
-
-        $lastAutoAssignment = HistoryLeads::with('sales')
-                                        ->where('is_automatic', true)
-                                        ->orderBy('id', 'desc')
-                                        ->first();
-
-        if (!$lastAutoAssignment) {
-            // First time assignment, get sales with order 1
-            return Sales::where('is_active', true)
-                       ->where('order', 1)
-                       ->firstOrFail()
-                       ->id;
-        }
-
-        $nextOrder = $lastAutoAssignment->sales->order + 1;
-
-        if ($nextOrder > $maxOrder) {
-            // Reset to first sales
-            $nextOrder = 1;
-        }
-
-        return Sales::where('is_active', true)
-                   ->where('order', $nextOrder)
-                   ->firstOrFail()
-                   ->id;
     }
 }

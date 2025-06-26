@@ -9,6 +9,10 @@ class Lead extends Model
 {
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'last_contact_at' => 'datetime'
+    ];
+
     // Relationships
     public function platform()
     {
@@ -75,6 +79,22 @@ class Lead extends Model
     {
         return $query->whereMonth('created_at', now()->month)
                     ->whereYear('created_at', now()->year);
+    }
+
+    public function scopeWithRecontact($query)
+    {
+        return $query->where('recontact_count', '>', 0);
+    }
+
+    public function scopeWithoutRecontact($query)
+    {
+        return $query->where('recontact_count', '=', 0);
+    }
+
+    public function scopeRecentRecontact($query, $hours = 24)
+    {
+        return $query->where('recontact_count', '>', 0)
+                    ->where('last_contact_at', '>=', now()->subHours($hours));
     }
 
     public function setStatusAttribute($value)
@@ -159,5 +179,10 @@ class Lead extends Model
     public static function getClosingLeadsCount()
     {
         return self::closingStatus()->count();
+    }
+
+    public static function getRecontactLeadsCount()
+    {
+        return self::withRecontact()->count();
     }
 }

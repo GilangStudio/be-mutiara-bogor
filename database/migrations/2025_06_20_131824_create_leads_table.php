@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('message')->nullable();
             $table->string('status')->default('NEW');
             $table->text('note')->nullable();
+            $table->integer('recontact_count')->default(0);
+            $table->timestamp('last_contact_at')->nullable();
             $table->foreignId('platform_id')->nullable()->constrained('platforms');
             $table->string('path_referral')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users');

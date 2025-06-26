@@ -62,6 +62,8 @@ Route::prefix('v1')->group(function () {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/fcm_token', [AuthController::class, 'update_token']);
+Route::post('/leads/submit', [LeadsController::class, 'store']);
 
 // Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::group(['name' => 'auth:api'], function () {
