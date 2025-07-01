@@ -297,4 +297,43 @@ class NotificationFirebaseService
 
         return $this->sendToSales($sales, $title, $body, $data);
     }
+
+    /**
+     * Send notification untuk recontact lead
+     * Dipanggil ketika lead yang sudah ada melakukan recontact
+     */
+    public function sendRecontactNotification($sales, $lead)
+    {
+        $recontactCount = $lead->recontact_count;
+        $recontactLabel = $recontactCount === 1 ? 'Recontact' : "Recontact ke-{$recontactCount}";
+        
+        $title = 'Lead Recontact! 🔄';
+        $body = "Hai {$sales->name}, {$lead->name} melakukan {$recontactLabel}. Ada update baru yang perlu difollow up!";
+        
+        // Jika recontact terjadi dalam 24 jam terakhir, tandai sebagai urgent
+        $isRecent = $lead->last_contact_at && $lead->last_contact_at->isAfter(now()->subHours(24));
+        
+        if ($isRecent) {
+            $title = 'Lead Recontact Terbaru! 🔥';
+            $body = "URGENT! {$lead->name} baru saja melakukan {$recontactLabel}. Segera follow up!";
+        }
+        
+        $data = [
+            'type' => 'recontact_lead',
+            'lead_id' => (string) $lead->id,
+            'lead_name' => $lead->name,
+            'lead_phone' => $lead->phone ?? '',
+            'lead_platform' => $lead->platform->platform_name ?? '',
+            'recontact_count' => (string) $recontactCount,
+            'recontact_label' => $recontactLabel,
+            'is_recent_recontact' => $isRecent ? 'true' : 'false',
+            'last_contact_at' => $lead->last_contact_at ? $lead->last_contact_at->toISOString() : '',
+            'last_contact_formatted' => $lead->last_contact_at ? $lead->last_contact_at->format('d M Y, H:i') : '',
+            'timestamp' => now()->toISOString(),
+            'priority' => $isRecent ? 'high' : 'normal',
+            'action' => 'open_lead_detail'
+        ];
+
+        return $this->sendToSales($sales, $title, $body, $data);
+    }
 }

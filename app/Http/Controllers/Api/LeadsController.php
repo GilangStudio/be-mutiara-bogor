@@ -1269,7 +1269,7 @@ class LeadsController extends Controller
 
             // Send notification to current sales about recontact
             if ($currentSales && $currentSales->fcm_token) {
-                $this->notificationService->sendRecontactNotification($currentSales, $existingLead);
+                $this->notificationFirebaseService->sendRecontactNotification($currentSales, $existingLead);
             }
 
             // Log recontact submission
