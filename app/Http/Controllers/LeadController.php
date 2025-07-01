@@ -94,11 +94,21 @@ class LeadController extends Controller
         
         // Order by latest
         $leads = $query
-        // ->orderByRaw('CASE WHEN recontact_count > 0 THEN 0 ELSE 1 END')
-                  ->orderBy('last_contact_at', 'desc')
-                  ->orderBy('created_at', 'desc')
-                  ->paginate(20)
-                  ->appends($request->query());
+                ->selectRaw('
+                    leads.*,
+                    CASE 
+                        WHEN recontact_count > 0 AND last_contact_at >= ? THEN 1
+                        WHEN recontact_count > 0 THEN 2  
+                        ELSE 3
+                    END as priority_order', [now()->subHours(24)])
+                ->orderBy('priority_order', 'asc')
+                ->orderByRaw('
+                    CASE 
+                        WHEN priority_order IN (1,2) THEN last_contact_at
+                        ELSE created_at
+                    END DESC')
+                ->paginate(20)
+                ->appends($request->query());
         
         // Get filter options
         $platforms = Platform::orderBy('platform_name')->get();

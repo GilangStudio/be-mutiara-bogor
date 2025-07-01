@@ -176,12 +176,21 @@ class LeadsController extends Controller
             // Apply pagination
             $perPage = $request->get('per_page', 15);
             $leads = $query
-                // Priority order: Recontact dengan last_contact_at terbaru di atas, lalu berdasarkan created_at
-                // ->orderByRaw('CASE WHEN recontact_count > 0 THEN 0 ELSE 1 END') // Recontact first
-                ->orderBy('last_contact_at', 'desc') // Latest contact first
-                ->orderBy('created_at', 'desc') // Then by creation date
-                ->paginate($perPage)
-                ->appends($request->query());
+                    ->selectRaw('
+                        leads.*,
+                        CASE 
+                            WHEN recontact_count > 0 AND last_contact_at >= ? THEN 1
+                            WHEN recontact_count > 0 THEN 2  
+                            ELSE 3
+                        END as priority_order', [now()->subHours(24)])
+                    ->orderBy('priority_order', 'asc')
+                    ->orderByRaw('
+                        CASE 
+                            WHEN priority_order IN (1,2) THEN last_contact_at
+                            ELSE created_at
+                        END DESC')
+                    ->paginate(20)
+                    ->appends($request->query());
 
             // Transform paginated data
             $transformedLeads = $leads->getCollection()->map(function ($lead) {
