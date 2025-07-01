@@ -62,12 +62,17 @@ Route::prefix('v1')->group(function () {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::post('/send_otp', [AuthController::class, 'send_otp']);
+Route::post('/verify_otp', [AuthController::class, 'verify_otp']);
+
 Route::post('/fcm_token', [AuthController::class, 'update_token']);
 Route::post('/leads/submit', [LeadsController::class, 'store']);
 
 // Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::group(['name' => 'auth:api'], function () {
     Route::post('/update_password', [AuthController::class, 'update_password']);
+    Route::post('/reset_password', [AuthController::class, 'reset_password']);
 
     Route::get('/get_statistics', [LeadsController::class, 'get_statistics']);
     Route::post('/toggle_favorite', [LeadsController::class, 'toggle_favorite']);

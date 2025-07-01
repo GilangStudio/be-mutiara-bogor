@@ -24,12 +24,12 @@ class ImageService
         $image = Image::read($file);
         
         // Resize jika lebih besar dari maxWidth
-        if ($image->width() > $maxWidth) {
-            $image->scale(width: $maxWidth);
-        }
+        // if ($image->width() > $maxWidth) {
+        //     $image->scale(width: $maxWidth);
+        // }
         
         // Konversi ke WebP dengan kompresi
-        $image->toWebp($quality);
+        $image->toWebp($quality, true);
         
         // Simpan ke storage
         Storage::disk('public')->put($fullPath, $image->encode());
@@ -53,11 +53,11 @@ class ImageService
             
             $image = Image::read($file);
             
-            if ($image->width() > $maxWidth) {
-                $image->scale(width: $maxWidth);
-            }
+            // if ($image->width() > $maxWidth) {
+            //     $image->scale(width: $maxWidth);
+            // }
             
-            $image->toWebp($quality);
+            $image->toWebp($quality, true);
             Storage::disk('public')->put($fullPath, $image->encode());
             
             $results[$sizeName] = $fullPath;

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Sales;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\EmailService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -82,6 +83,13 @@ class AuthController extends Controller {
 
     public function update_token(Request $request) {
         $sales = Sales::where('api_token', request()->bearerToken())->whereNotNull('api_token')->active()->first();
+        if (!$sales) {
+            return response()->json([
+               'status' => 'error',
+               'message' => 'Invalid token'
+            ]);
+        }
+        
         $sales->update(['fcm_token' => $request->fcm_token]);
         return response()->json([
             'status' => 'success'
@@ -106,14 +114,14 @@ class AuthController extends Controller {
             'email' => 'required',
         ]);
 
-        $sales = Sales::where('sales_email', strtolower($request->email))->active()->first();
+        $sales = Sales::where('email', strtolower($request->email))->active()->first();
 
         if ($sales) {
             //generate otp random number between 1000 and 9999
             $otp = rand(1000, 9999);
             $send = EmailService::send(
-                to: $sales->sales_email,
-                subject: 'OTP Code PMM Sales',
+                to: $sales->email,
+                subject: 'OTP Code Sales App',
                 view: 'email.otp',
                 data: [
                     'otp_code' => $otp
@@ -164,7 +172,7 @@ class AuthController extends Controller {
             'otp_code' => 'required',
         ]);
 
-        $sales = Sales::where('sales_email', strtolower($request->email))->where('otp_code', $request->otp_code)->active()->first();
+        $sales = Sales::where('email', strtolower($request->email))->where('otp_code', $request->otp_code)->active()->first();
 
         if ($sales) {
             $token = Str::random(60);
@@ -301,6 +309,30 @@ class AuthController extends Controller {
                 'message' => 'An error occurred while updating profile',
                 'data' => null
             ], 500);
+        }
+    }
+
+    public function reset_password(Request $request) {
+        $request->validate([
+            'new_password' => 'required',
+        ]);
+
+        $sales = Sales::where('api_token', request()->bearerToken())->whereNotNull('api_token')->active()->first();
+        if ($sales) {
+            $sales->update(['api_token' => null, 'fcm_token' => null]);
+            User::where('id', $sales->user_id)->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Password updated successfully'
+            ]);
+        }
+        else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found'
+            ]);
         }
     }
 }
