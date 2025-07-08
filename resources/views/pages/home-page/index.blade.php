@@ -454,7 +454,7 @@
                                     @if($homePage && $homePage->banner_video_url)
                                         Leave empty to keep current banner video.
                                     @endif
-                                    Supported: MP4, MOV, AVI. Max: 50MB
+                                    Supported: MP4, MOV, AVI. Max: 200MB
                                 </small>
                                 <div class="mt-2" id="banner-video-preview"></div>
                             </div>
@@ -1761,9 +1761,9 @@
                 input.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (file) {
-                        const maxSize = 50 * 1024 * 1024; // 50MB
+                        const maxSize = 200 * 1024 * 1024; // 200MB
                         if (file.size > maxSize) {
-                            showAlert(input, 'danger', 'Video file size too large. Maximum 50MB allowed.');
+                            showAlert(input, 'danger', 'Video file size too large. Maximum 200MB allowed.');
                             input.value = '';
                             return;
                         }

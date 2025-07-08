@@ -27,7 +27,7 @@ class HomePageController extends Controller
         $request->validate([
             'banner_type' => 'required|in:image,video',
             'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
-            'banner_video' => 'nullable|mimes:mp4,mov,avi|max:51200', // 50MB
+            'banner_video' => 'nullable|mimes:mp4,mov,avi|max:204800', // 204800kb = 200mb
             'banner_alt_text' => 'nullable|string|max:255',
             'hero_title' => 'required|string|max:255',
             'hero_description' => 'required|string',
@@ -58,7 +58,7 @@ class HomePageController extends Controller
             'banner_image.image' => 'Banner must be an image file',
             'banner_image.max' => 'Banner image size cannot exceed 10MB',
             'banner_video.mimes' => 'Banner video must be mp4, mov, or avi format',
-            'banner_video.max' => 'Banner video size cannot exceed 50MB',
+            'banner_video.max' => 'Banner video size cannot exceed 200MB',
             'hero_title.required' => 'Hero title is required',
             'hero_description.required' => 'Hero description is required',
             'about_section_title.required' => 'About section title is required',
