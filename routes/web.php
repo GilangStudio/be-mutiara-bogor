@@ -143,6 +143,9 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{lead}', [LeadController::class, 'destroy'])->name('destroy');
             Route::patch('/{lead}/status', [LeadController::class, 'changeStatus'])->name('change-status');
             Route::post('/bulk-action', [LeadController::class, 'bulkAction'])->name('bulk-action');
+            
+            Route::get('/export', [LeadController::class, 'export'])->name('export');
+            Route::get('/export/preview', [LeadController::class, 'exportPreview'])->name('export-preview');
         });
     });
 

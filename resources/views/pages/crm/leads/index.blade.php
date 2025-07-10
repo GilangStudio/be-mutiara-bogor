@@ -43,18 +43,20 @@
     /* Bulk actions */
     .bulk-actions {
         display: none;
-        /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 0.75rem;
-        border-radius: 0.5rem; */
     }
 
     .bulk-actions.show {
         display: block;
     }
 
-    .select-all-checkbox {
-        /* transform: scale(1.2); */
+    /* Export modal animations */
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
 </style>
 @endpush
@@ -62,9 +64,33 @@
 @section('header')
 <div class="d-flex justify-content-between align-items-center">
     <h2 class="page-title">Leads Management</h2>
-    <a href="{{ route('crm.leads.create') }}" class="btn btn-primary">
-        <i class="ti ti-plus me-1"></i> Add Lead
-    </a>
+    <div class="btn-list">
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="ti ti-download me-1"></i>
+                Export Data
+            </button>
+            <div class="dropdown-menu">
+                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#export-modal">
+                    <i class="ti ti-file-export me-2"></i>
+                    Export dengan Preview
+                </button>
+                <div class="dropdown-divider"></div>
+                <h6 class="dropdown-header">Quick Export</h6>
+                <a class="dropdown-item" href="{{ route('crm.leads.export', ['format' => 'csv'] + request()->query()) }}">
+                    <i class="ti ti-file-type-csv me-2 text-green"></i>
+                    Download CSV
+                </a>
+                <a class="dropdown-item" href="{{ route('crm.leads.export', ['format' => 'excel'] + request()->query()) }}">
+                    <i class="ti ti-file-type-xls me-2 text-blue"></i>
+                    Download Excel
+                </a>
+            </div>
+        </div>
+        <a href="{{ route('crm.leads.create') }}" class="btn btn-primary">
+            <i class="ti ti-plus me-1"></i> Add Lead
+        </a>
+    </div>
 </div>
 @endsection
 
@@ -211,11 +237,35 @@
                     Search & Filter
                 </h3>
                 <div class="card-actions">
-                    @if(request()->hasAny(['search', 'status', 'platform_id', 'sales_id', 'assignment_type', 'date_from', 'date_to']))
-                    <a href="{{ route('crm.leads.index') }}" class="btn btn-outline-secondary btn-sm" title="Clear all filters">
-                        <i class="ti ti-x me-1"></i>Clear Filters
-                    </a>
-                    @endif
+                    <div class="btn-list">
+                        @if(request()->hasAny(['search', 'status', 'platform_id', 'sales_id', 'assignment_type', 'date_from', 'date_to']))
+                        <a href="{{ route('crm.leads.index') }}" class="btn btn-outline-secondary btn-sm" title="Clear all filters">
+                            <i class="ti ti-x me-1"></i>Clear Filters
+                        </a>
+                        @endif
+                        
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ti ti-download me-1"></i>
+                                Export
+                            </button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#export-modal">
+                                    <i class="ti ti-settings me-2"></i>
+                                    Export dengan Preview
+                                </button>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ route('crm.leads.export', ['format' => 'csv'] + request()->query()) }}">
+                                    <i class="ti ti-file-type-csv me-2 text-green"></i>
+                                    Quick CSV
+                                </a>
+                                <a class="dropdown-item" href="{{ route('crm.leads.export', ['format' => 'excel'] + request()->query()) }}">
+                                    <i class="ti ti-file-type-xls me-2 text-blue"></i>
+                                    Quick Excel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -395,19 +445,6 @@
                             @endforeach
                         </div>
                     </div>
-                    {{-- <div class="dropdown">
-                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="ti ti-user me-1"></i>Assign Sales
-                        </button>
-                        <div class="dropdown-menu">
-                            @foreach($sales as $salesItem)
-                            <a class="dropdown-item" href="#" onclick="bulkAssignSales('{{ $salesItem->id }}')">
-                                <div class="avatar avatar-xs bg-primary-lt me-2">{{ $salesItem->order }}</div>
-                                {{ $salesItem->name }}
-                            </a>
-                            @endforeach
-                        </div>
-                    </div> --}}
                     <button type="button" class="btn btn-sm btn-danger" onclick="bulkDelete()">
                         <i class="ti ti-trash me-1"></i>Delete
                     </button>
@@ -621,6 +658,187 @@
     </div>
 </div>
 
+{{-- Modal Export Leads --}}
+<div class="modal modal-blur fade" id="export-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="ti ti-download me-2"></i>
+                    Export Data Leads
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="export-form" action="{{ route('crm.leads.export') }}" method="GET">
+                    {{-- Preserve current filters --}}
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    @endif
+                    @if(request('status'))
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                    @endif
+                    @if(request('platform_id'))
+                        <input type="hidden" name="platform_id" value="{{ request('platform_id') }}">
+                    @endif
+                    @if(request('sales_id'))
+                        <input type="hidden" name="sales_id" value="{{ request('sales_id') }}">
+                    @endif
+                    @if(request('assignment_type'))
+                        <input type="hidden" name="assignment_type" value="{{ request('assignment_type') }}">
+                    @endif
+                    @if(request('has_recontact'))
+                        <input type="hidden" name="has_recontact" value="{{ request('has_recontact') }}">
+                    @endif
+                    @if(request('date_from'))
+                        <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                    @endif
+                    @if(request('date_to'))
+                        <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                    @endif
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">
+                                        <i class="ti ti-file-download me-2"></i>
+                                        Format Export
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-selectgroup">
+                                        <label class="form-selectgroup-item w-100">
+                                            <input type="radio" name="format" value="csv" class="form-selectgroup-input" checked>
+                                            <span class="form-selectgroup-label">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="ti ti-file-type-csv icon me-3 text-secondary"></i>
+                                                    <div class="text-start">
+                                                        <strong>CSV (Comma Separated Values)</strong>
+                                                        <div class="text-secondary small">
+                                                            Format universal yang bisa dibuka di Excel, Google Sheets, dan aplikasi lainnya
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </label>
+                                        <label class="form-selectgroup-item w-100">
+                                            <input type="radio" name="format" value="excel" class="form-selectgroup-input">
+                                            <span class="form-selectgroup-label">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="ti ti-file-type-xls icon me-3 text-green"></i>
+                                                    <div class="text-start">
+                                                        <strong>Excel (XLS)</strong>
+                                                        <div class="text-secondary small">
+                                                            Format Microsoft Excel yang kompatibel dengan semua versi Excel
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">
+                                        <i class="ti ti-info-circle me-2"></i>
+                                        Preview Export
+                                    </h4>
+                                </div>
+                                <div class="card-body" id="export-preview">
+                                    <div class="d-flex justify-content-center py-3">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if(request()->hasAny(['search', 'status', 'platform_id', 'sales_id', 'assignment_type', 'has_recontact', 'date_from', 'date_to']))
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <h4><i class="ti ti-filter me-2"></i>Filter Aktif</h4>
+                                <p class="mb-2">Export akan menggunakan filter yang sedang aktif:</p>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    @if(request('search'))
+                                    <span class="badge bg-blue-lt">
+                                        <i class="ti ti-search me-1"></i>
+                                        Search: "{{ request('search') }}"
+                                    </span>
+                                    @endif
+                                    @if(request('status'))
+                                    <span class="badge bg-green-lt">
+                                        <i class="ti ti-flag me-1"></i>
+                                        Status: {{ match(request('status')) {
+                                            'NEW' => 'Baru',
+                                            'PROCESS' => 'Proses',
+                                            'CLOSING' => 'Closing',
+                                            default => request('status')
+                                        } }}
+                                    </span>
+                                    @endif
+                                    @if(request('platform_id'))
+                                    @php
+                                        $selectedPlatform = $platforms->find(request('platform_id'));
+                                    @endphp
+                                    <span class="badge bg-purple-lt">
+                                        <i class="ti ti-device-desktop me-1"></i>
+                                        Platform: {{ $selectedPlatform->platform_name ?? 'Unknown' }}
+                                    </span>
+                                    @endif
+                                    @if(request('sales_id'))
+                                    @php
+                                        $selectedSales = $sales->find(request('sales_id'));
+                                    @endphp
+                                    <span class="badge bg-yellow-lt">
+                                        <i class="ti ti-user me-1"></i>
+                                        Sales: {{ $selectedSales->name ?? 'Unknown' }}
+                                    </span>
+                                    @endif
+                                    @if(request('assignment_type'))
+                                    <span class="badge bg-orange-lt">
+                                        <i class="ti ti-settings me-1"></i>
+                                        Assignment: {{ request('assignment_type') === 'auto' ? 'Automatic' : 'Manual' }}
+                                    </span>
+                                    @endif
+                                    @if(request('date_from') || request('date_to'))
+                                    <span class="badge bg-red-lt">
+                                        <i class="ti ti-calendar me-1"></i>
+                                        Tanggal: {{ request('date_from') ?? '...' }} - {{ request('date_to') ?? '...' }}
+                                    </span>
+                                    @endif
+                                    @if(request('has_recontact'))
+                                    <span class="badge bg-orange-lt">
+                                        <i class="ti ti-repeat me-1"></i>
+                                        Recontact: {{ request('has_recontact') === 'true' ? 'Dengan Recontact' : 'Tanpa Recontact' }}
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    <i class="ti ti-x me-1"></i>
+                    Batal
+                </button>
+                <button type="button" class="btn btn-primary" id="download-btn" disabled>
+                    <i class="ti ti-download me-1"></i>
+                    <span id="download-text">Download</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- Hidden Form for Bulk Actions --}}
 <form id="bulk-action-form" method="POST" action="{{ route('crm.leads.bulk-action') }}" style="display: none;">
     @csrf
@@ -799,19 +1017,6 @@
             }
         });
         
-        // Add loading animation CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            .animate-spin {
-                animation: spin 1s linear infinite;
-            }
-            @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
-        
         // Bulk Actions
         const selectAllCheckbox = document.getElementById('select-all');
         const leadCheckboxes = document.querySelectorAll('.lead-checkbox');
@@ -872,12 +1077,6 @@
             }
         };
         
-        // window.bulkAssignSales = function(salesId) {
-        //     if (confirm('Apakah Anda yakin ingin mengubah sales lead yang dipilih? (Hanya berlaku untuk lead dengan status BARU)')) {
-        //         performBulkAction('assign_sales', { sales_id: salesId });
-        //     }
-        // };
-        
         window.bulkDelete = function() {
             if (confirm('Apakah Anda yakin ingin menghapus lead yang dipilih? Tindakan ini tidak dapat dibatalkan.')) {
                 performBulkAction('delete');
@@ -917,6 +1116,215 @@
             
             // Submit form
             form.submit();
+        }
+
+        // Export Modal Functionality
+        const exportModal = document.getElementById('export-modal');
+        const exportForm = document.getElementById('export-form');
+        const downloadBtn = document.getElementById('download-btn');
+        const downloadText = document.getElementById('download-text');
+        const exportPreview = document.getElementById('export-preview');
+
+        // Load preview when modal is shown
+        exportModal.addEventListener('show.bs.modal', function() {
+            loadExportPreview();
+        });
+
+        // Handle format change
+        const formatInputs = document.querySelectorAll('input[name="format"]');
+        formatInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                updateDownloadButton();
+            });
+        });
+
+        // Handle download button click
+        downloadBtn.addEventListener('click', function() {
+            if (!this.disabled) {
+                // Show loading state
+                this.disabled = true;
+                const originalIcon = this.querySelector('i').className;
+                this.querySelector('i').className = 'ti ti-loader-2 animate-spin me-1';
+                downloadText.textContent = 'Downloading...';
+                
+                // Submit form to download
+                exportForm.submit();
+                
+                // Reset button after delay
+                setTimeout(() => {
+                    this.disabled = false;
+                    this.querySelector('i').className = originalIcon;
+                    updateDownloadButton();
+                    
+                    // Close modal
+                    bootstrap.Modal.getInstance(exportModal).hide();
+                    
+                    // Show success message
+                    showToast('Export berhasil didownload!', 'success');
+                }, 2000);
+            }
+        });
+
+        function loadExportPreview() {
+            exportPreview.innerHTML = `
+                <div class="d-flex justify-content-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            // Get current filters from the form
+            const formData = new FormData(exportForm);
+            const params = new URLSearchParams();
+            
+            // Add form data to params
+            for (let [key, value] of formData.entries()) {
+                if (key !== 'format') { // exclude format from preview request
+                    params.append(key, value);
+                }
+            }
+
+            fetch(`{{ route('crm.leads.export-preview') }}?${params.toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayPreview(data.stats);
+                        downloadBtn.disabled = false;
+                        updateDownloadButton();
+                    } else {
+                        displayError(data.message || 'Gagal memuat preview');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayError('Gagal memuat preview export');
+                });
+        }
+
+        function displayPreview(stats) {
+            if (stats.total_leads === 0) {
+                exportPreview.innerHTML = `
+                    <div class="empty">
+                        <div class="empty-icon">
+                            <i class="ti ti-database-off icon"></i>
+                        </div>
+                        <p class="empty-title">Tidak ada data untuk diexport</p>
+                        <p class="empty-subtitle text-secondary">
+                            Tidak ada leads yang sesuai dengan filter yang dipilih
+                        </p>
+                    </div>
+                `;
+                downloadBtn.disabled = true;
+                updateDownloadButton();
+                return;
+            }
+
+            let statusBreakdown = '';
+            let hasStatusData = false;
+            stats.status_breakdown.forEach(item => {
+                if (item.count > 0) {
+                    hasStatusData = true;
+                    const statusColor = getStatusColor(item.status);
+                    statusBreakdown += `
+                        <div class="col-4">
+                            <div class="text-center">
+                                <div class="h3 mb-1 text-${statusColor}">${item.count}</div>
+                                <div class="text-secondary small">${item.status}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            let platformBreakdown = '';
+            if (stats.platform_breakdown.length > 0) {
+                stats.platform_breakdown.forEach(item => {
+                    platformBreakdown += `
+                        <div class="d-flex justify-content-between align-items-center py-1">
+                            <span class="text-truncate">${item.platform}</span>
+                            <span class="badge bg-blue-lt">${item.count}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            exportPreview.innerHTML = `
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card card-sm">
+                            <div class="card-body text-center">
+                                <div class="h2 mb-1 text-primary">${stats.total_leads.toLocaleString()}</div>
+                                <div class="text-secondary">Total Leads</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-sm">
+                            <div class="card-body text-center">
+                                <div class="text-secondary small">Periode Data</div>
+                                <div class="fw-bold">${stats.date_range.from || 'N/A'} - ${stats.date_range.to || 'N/A'}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${hasStatusData ? `
+                    <div class="col-12">
+                        <h5><i class="ti ti-flag me-2"></i>Breakdown Status</h5>
+                        <div class="row">
+                            ${statusBreakdown}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    ${stats.platform_breakdown.length > 0 ? `
+                    <div class="col-12">
+                        <h5><i class="ti ti-device-desktop me-2"></i>Breakdown Platform</h5>
+                        <div class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
+                            ${platformBreakdown}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="col-12">
+                        <div class="alert alert-success">
+                            <i class="ti ti-check me-2"></i>
+                            Data siap untuk diexport dengan ${stats.total_leads} leads
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayError(message) {
+            exportPreview.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="ti ti-exclamation-triangle me-2"></i>
+                    ${message}
+                </div>
+            `;
+            downloadBtn.disabled = true;
+            updateDownloadButton();
+        }
+
+        function updateDownloadButton() {
+            const selectedFormat = document.querySelector('input[name="format"]:checked')?.value || 'csv';
+            const formatText = selectedFormat === 'excel' ? 'Excel' : 'CSV';
+            
+            if (!downloadBtn.disabled) {
+                downloadText.textContent = `Download ${formatText}`;
+            } else {
+                downloadText.textContent = 'Download';
+            }
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'Baru': 'blue',
+                'Proses': 'yellow', 
+                'Closing': 'green'
+            };
+            return colors[status] || 'secondary';
         }
     });
 </script>

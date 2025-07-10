@@ -479,4 +479,65 @@ class LeadController extends Controller
                            ->with('error', 'Bulk action failed: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Export leads data
+     */
+    public function export(Request $request)
+    {
+        try {
+            $format = $request->get('format', 'csv'); // default CSV
+            
+            // Get all filter parameters
+            $filters = $request->only([
+                'search', 'status', 'platform_id', 'sales_id', 
+                'assignment_type', 'has_recontact', 'date_from', 'date_to'
+            ]);
+
+            $exportService = new \App\Services\LeadsExportService();
+
+            switch ($format) {
+                case 'excel':
+                    // Use HTML table format for better Excel compatibility
+                    return $exportService->exportToExcelHtml($filters);
+                case 'excel_csv':
+                    // Alternative: Excel-friendly CSV
+                    return $exportService->exportToExcel($filters);
+                case 'csv':
+                default:
+                    return $exportService->exportToCsv($filters);
+            }
+
+        } catch (\Exception $e) {
+            return redirect()->route('crm.leads.index')
+                           ->with('error', 'Gagal mengexport data: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Show export preview/stats
+     */
+    public function exportPreview(Request $request)
+    {
+        try {
+            $filters = $request->only([
+                'search', 'status', 'platform_id', 'sales_id', 
+                'assignment_type', 'has_recontact', 'date_from', 'date_to'
+            ]);
+
+            $exportService = new \App\Services\LeadsExportService();
+            $stats = $exportService->getExportStats($filters);
+
+            return response()->json([
+                'success' => true,
+                'stats' => $stats
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
