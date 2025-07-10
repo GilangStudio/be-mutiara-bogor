@@ -299,7 +299,7 @@
                                     @if($conceptPage && $conceptPage->banner_image_url)
                                         Leave empty to keep current banner.
                                     @endif
-                                    Recommended: 1920x600px, Max: 5MB
+                                    Recommended: 1920x600px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="banner-image-preview"></div>
                             </div>
@@ -567,7 +567,7 @@
                         <div class="mb-3">
                             <label class="form-label">Section Image <span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="image" accept="image/*" required id="add-section-image">
-                            <small class="form-hint">Recommended: 1200x800px, Max: 5MB</small>
+                            <small class="form-hint">Recommended: 1200x800px, Max: 10MB</small>
                             <div class="mt-2" id="add-section-image-preview"></div>
                         </div>
                     </div>
@@ -635,7 +635,7 @@
                         <div class="mb-3">
                             <label class="form-label">Section Image</label>
                             <input type="file" class="form-control" name="image" accept="image/*" id="edit-section-image">
-                            <small class="form-hint">Leave empty to keep current image. Recommended: 1200x800px, Max: 5MB</small>
+                            <small class="form-hint">Leave empty to keep current image. Recommended: 1200x800px, Max: 10MB</small>
                             <div class="mt-2" id="edit-section-image-preview"></div>
                         </div>
                     </div>
@@ -722,8 +722,8 @@
             bannerInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (file) {
-                    if (file.size > 5 * 1024 * 1024) {
-                        showAlert(bannerInput, 'danger', 'File size too large. Maximum 5MB allowed.');
+                    if (file.size > 10 * 1024 * 1024) {
+                        showAlert(bannerInput, 'danger', 'File size too large. Maximum 10MB allowed.');
                         bannerInput.value = '';
                         return;
                     }
@@ -804,8 +804,8 @@
 
         function setupImagePreview(file, previewElement, clearFunction) {
             if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showAlert(previewElement.previousElementSibling, 'danger', 'File size too large. Maximum 5MB allowed.');
+                if (file.size > 10 * 1024 * 1024) {
+                    showAlert(previewElement.previousElementSibling, 'danger', 'File size too large. Maximum 10MB allowed.');
                     return;
                 }
 

@@ -235,7 +235,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            {{ $news->image_url ? 'Leave empty to keep current image.' : '' }} Recommended: 1200x630px, Max: 5MB
+                            {{ $news->image_url ? 'Leave empty to keep current image.' : '' }} Recommended: 1200x630px, Max: 10MB
                         </small>
                         <div class="mt-2" id="image-preview"></div>
                     </div>
@@ -371,9 +371,9 @@
             const file = e.target.files[0];
             if (file) {
                 // Validate file size
-                const maxSize = 5 * 1024 * 1024; // 5MB
+                const maxSize = 10 * 1024 * 1024; // 10MB
                 if (file.size > maxSize) {
-                    showAlert(imageInput, 'danger', 'File size too large. Maximum 5MB allowed.');
+                    showAlert(imageInput, 'danger', 'File size too large. Maximum 10MB allowed.');
                     imageInput.value = '';
                     return;
                 }

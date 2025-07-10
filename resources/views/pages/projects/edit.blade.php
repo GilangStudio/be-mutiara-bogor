@@ -272,7 +272,7 @@
                                         @enderror
                                         <small class="form-hint">
                                             <i class="ti ti-info-circle me-1"></i>
-                                            Recommended: 1920x600px, Max: 5MB
+                                            Recommended: 1920x600px, Max: 10MB
                                         </small>
                                         <div class="mt-2" id="banner-image-preview"></div>
                                     </div>
@@ -554,7 +554,7 @@
                                 @enderror
                                 <small class="form-hint">
                                     <i class="ti ti-info-circle me-1"></i>
-                                    Recommended: 1200x800px, Max: 5MB
+                                    Recommended: 1200x800px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="main-image-preview"></div>
                             </div>
@@ -588,7 +588,7 @@
                                 @enderror
                                 <small class="form-hint">
                                     <i class="ti ti-info-circle me-1"></i>
-                                    Recommended: 1920x1080px, Max: 5MB
+                                    Recommended: 1920x1080px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="siteplan-image-preview"></div>
                             </div>
@@ -623,7 +623,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Select multiple images to add to gallery. Max: 5MB per image
+                            Select multiple images to add to gallery. Max: 10MB per image
                         </small>
                     </div>
                     
@@ -739,7 +739,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Select multiple images to add to facility gallery. Max: 5MB per image
+                            Select multiple images to add to facility gallery. Max: 10MB per image
                         </small>
                     </div>
                     
@@ -942,9 +942,9 @@
                 const file = e.target.files[0];
                 if (file) {
                     // Validate file size
-                    const maxSize = inputId.includes('logo') ? 2 * 1024 * 1024 : 5 * 1024 * 1024; // 2MB for logo, 5MB for others
+                    const maxSize = inputId.includes('logo') ? 2 * 1024 * 1024 : 10 * 1024 * 1024; // 2MB for logo, 10MB for others
                     if (file.size > maxSize) {
-                        showAlert(input, 'danger', `File size too large. Maximum ${inputId.includes('logo') ? '2MB' : '5MB'} allowed.`);
+                        showAlert(input, 'danger', `File size too large. Maximum ${inputId.includes('logo') ? '2MB' : '10MB'} allowed.`);
                         input.value = '';
                         return;
                     }
@@ -1090,8 +1090,8 @@
                         return;
                     }
                     
-                    if (file.size > 5 * 1024 * 1024) {
-                        showAlert(galleryInput, 'danger', `File ${file.name} terlalu besar (max: 5MB)`);
+                    if (file.size > 10 * 1024 * 1024) {
+                        showAlert(galleryInput, 'danger', `File ${file.name} terlalu besar (max: 10MB)`);
                         return;
                     }
 
@@ -1359,8 +1359,8 @@
                         return;
                     }
                     
-                    if (file.size > 5 * 1024 * 1024) {
-                        showAlert(facilityInput, 'danger', `File ${file.name} is too large (max: 5MB)`);
+                    if (file.size > 10 * 1024 * 1024) {
+                        showAlert(facilityInput, 'danger', `File ${file.name} is too large (max: 10MB)`);
                         return;
                     }
 

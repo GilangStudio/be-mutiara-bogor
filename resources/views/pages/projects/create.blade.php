@@ -94,7 +94,7 @@
                                         @error('banner_image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        <small class="form-hint">Rekomendasi: 1920x600px, Maks: 5MB</small>
+                                        <small class="form-hint">Rekomendasi: 1920x600px, Maks: 10MB</small>
                                         <div class="mt-2" id="banner-image-preview"></div>
                                     </div>
                                 </div>
@@ -212,7 +212,7 @@
                                 @error('main_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Rekomendasi: 1200x800px, Maks: 5MB</small>
+                                <small class="form-hint">Rekomendasi: 1200x800px, Maks: 10MB</small>
                                 <div class="mt-2" id="main-image-preview"></div>
                             </div>
                         </div>
@@ -240,7 +240,7 @@
                                 @error('siteplan_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Rekomendasi: 1920x1080px, Maks: 5MB</small>
+                                <small class="form-hint">Rekomendasi: 1920x1080px, Maks: 10MB</small>
                                 <div class="mt-2" id="siteplan-image-preview"></div>
                             </div>
                         </div>
@@ -274,7 +274,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Pilih beberapa gambar untuk galeri project. Maks: 5MB per gambar
+                            Pilih beberapa gambar untuk galeri project. Maks: 10MB per gambar
                         </small>
                     </div>
                     
@@ -308,7 +308,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Pilih beberapa gambar fasilitas project. Maks: 5MB per gambar
+                            Pilih beberapa gambar fasilitas project. Maks: 10MB per gambar
                         </small>
                     </div>
                     
@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Image preview functionality
-    function setupImagePreview(inputId, previewId, maxFileSize = 5) {
+    function setupImagePreview(inputId, previewId, maxFileSize = 10) {
         const input = document.getElementById(inputId);
         const preview = document.getElementById(previewId);
         
@@ -496,8 +496,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                if (file.size > 5 * 1024 * 1024) {
-                    showAlert(galleryInput, 'danger', `File ${file.name} terlalu besar (maks: 5MB)`);
+                if (file.size > 10 * 1024 * 1024) {
+                    showAlert(galleryInput, 'danger', `File ${file.name} terlalu besar (maks: 10MB)`);
                     return;
                 }
 
@@ -580,8 +580,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                if (file.size > 5 * 1024 * 1024) {
-                    showAlert(facilityInput, 'danger', `File ${file.name} terlalu besar (maks: 5MB)`);
+                if (file.size > 10 * 1024 * 1024) {
+                    showAlert(facilityInput, 'danger', `File ${file.name} terlalu besar (maks: 10MB)`);
                     return;
                 }
 

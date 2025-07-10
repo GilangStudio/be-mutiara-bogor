@@ -13,14 +13,14 @@ class ConceptPageSectionController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'content' => 'required|string',
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:10240',
             'image_alt_text' => 'nullable|string|max:255',
             'layout_type' => 'required|in:image_left,image_right',
         ], [
             'content.required' => 'Content is required',
             'image.required' => 'Image is required',
             'image.image' => 'File must be an image',
-            'image.max' => 'Image size cannot exceed 5MB',
+            'image.max' => 'Image size cannot exceed 10MB',
             'layout_type.required' => 'Layout type is required',
             'layout_type.in' => 'Layout type must be either image_left or image_right',
         ]);
@@ -62,13 +62,13 @@ class ConceptPageSectionController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
             'image_alt_text' => 'nullable|string|max:255',
             'layout_type' => 'required|in:image_left,image_right',
         ], [
             'content.required' => 'Content is required',
             'image.image' => 'File must be an image',
-            'image.max' => 'Image size cannot exceed 5MB',
+            'image.max' => 'Image size cannot exceed 10MB',
             'layout_type.required' => 'Layout type is required',
             'layout_type.in' => 'Layout type must be either image_left or image_right',
         ]);

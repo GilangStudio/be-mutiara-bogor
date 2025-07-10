@@ -250,7 +250,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Select multiple images to add to banners. Max: 5MB per image
+                            Select multiple images to add to banners. Max: 10MB per image
                         </small>
                     </div>
                     
@@ -700,8 +700,8 @@
                         return;
                     }
                     
-                    if (file.size > 5 * 1024 * 1024) {
-                        showAlert(bannerInput, 'danger', `File ${file.name} is too large (max: 5MB)`);
+                    if (file.size > 10 * 1024 * 1024) {
+                        showAlert(bannerInput, 'danger', `File ${file.name} is too large (max: 10MB)`);
                         return;
                     }
 

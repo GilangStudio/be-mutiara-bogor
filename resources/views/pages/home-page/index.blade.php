@@ -730,7 +730,7 @@
                                     @if($homePage && $homePage->about_image_url)
                                         Leave empty to keep current image.
                                     @endif
-                                    Recommended: 1200x800px, Max: 5MB
+                                    Recommended: 1200x800px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="about-image-preview"></div>
                             </div>
@@ -858,7 +858,7 @@
                                     @if($homePage && $homePage->features_image_url)
                                         Leave empty to keep current image.
                                     @endif
-                                    Recommended: 1200x800px, Max: 5MB
+                                    Recommended: 1200x800px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="features-image-preview"></div>
                             </div>
@@ -986,7 +986,7 @@
                                     @if($homePage && $homePage->location_image_url)
                                         Leave empty to keep current image.
                                     @endif
-                                    Recommended: 1200x800px, Max: 5MB
+                                    Recommended: 1200x800px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="location-image-preview"></div>
                             </div>
@@ -1704,9 +1704,9 @@
                 input.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (file) {
-                        const maxSize = inputId.includes('banner') ? 10 * 1024 * 1024 : 5 * 1024 * 1024;
+                        const maxSize = inputId.includes('banner') ? 10 * 1024 * 1024 : 10 * 1024 * 1024;
                         if (file.size > maxSize) {
-                            showAlert(input, 'danger', `File size too large. Maximum ${inputId.includes('banner') ? '10MB' : '5MB'} allowed.`);
+                            showAlert(input, 'danger', `File size too large. Maximum ${inputId.includes('banner') ? '10MB' : '10MB'} allowed.`);
                             input.value = '';
                             return;
                         }

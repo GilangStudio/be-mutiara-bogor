@@ -28,13 +28,13 @@ class AccessibilityController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120', // 5MB
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:10240', // 10MB
         ], [
             'name.required' => 'Accessibility name is required',
             'name.max' => 'Accessibility name cannot exceed 255 characters',
             'image.required' => 'Accessibility image is required',
             'image.image' => 'File must be an image',
-            'image.max' => 'Image size cannot exceed 5MB',
+            'image.max' => 'Image size cannot exceed 10MB',
         ]);
 
         try {
@@ -77,12 +77,12 @@ class AccessibilityController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
         ], [
             'name.required' => 'Accessibility name is required',
             'name.max' => 'Accessibility name cannot exceed 255 characters',
             'image.image' => 'File must be an image',
-            'image.max' => 'Image size cannot exceed 5MB',
+            'image.max' => 'Image size cannot exceed 10MB',
         ]);
 
         try {

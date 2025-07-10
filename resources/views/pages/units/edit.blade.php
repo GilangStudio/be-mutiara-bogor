@@ -446,7 +446,7 @@
                                 @enderror
                                 <small class="form-hint">
                                     <i class="ti ti-info-circle me-1"></i>
-                                    Recommended: 1200x800px, Max: 5MB
+                                    Recommended: 1200x800px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="main-image-preview"></div>
                             </div>
@@ -468,7 +468,7 @@
                                 @enderror
                                 <small class="form-hint">
                                     <i class="ti ti-info-circle me-1"></i>
-                                    Recommended: 1920x600px, Max: 5MB
+                                    Recommended: 1920x600px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="banner-image-preview"></div>
                             </div>
@@ -485,7 +485,7 @@
                                 @enderror
                                 <small class="form-hint">
                                     <i class="ti ti-info-circle me-1"></i>
-                                    Recommended: 1200x800px, Max: 5MB
+                                    Recommended: 1200x800px, Max: 10MB
                                 </small>
                                 <div class="mt-2" id="floor-plan-image-preview"></div>
                             </div>
@@ -520,7 +520,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Select multiple images to add to gallery. Max: 5MB per image
+                            Select multiple images to add to gallery. Max: 10MB per image
                         </small>
                     </div>
                     
@@ -682,9 +682,9 @@
                 const file = e.target.files[0];
                 if (file) {
                     // Validate file size
-                    const maxSize = 5 * 1024 * 1024; // 5MB
+                    const maxSize = 10 * 1024 * 1024; // 10MB
                     if (file.size > maxSize) {
-                        showAlert(input, 'danger', 'File size too large. Maximum 5MB allowed.');
+                        showAlert(input, 'danger', 'File size too large. Maximum 10MB allowed.');
                         input.value = '';
                         return;
                     }
@@ -769,8 +769,8 @@
                         return;
                     }
                     
-                    if (file.size > 5 * 1024 * 1024) {
-                        showAlert(galleryInput, 'danger', `File ${file.name} is too large (max: 5MB)`);
+                    if (file.size > 10 * 1024 * 1024) {
+                        showAlert(galleryInput, 'danger', `File ${file.name} is too large (max: 10MB)`);
                         return;
                     }
 

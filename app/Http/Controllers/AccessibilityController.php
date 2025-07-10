@@ -35,13 +35,13 @@ class AccessibilityController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120', // 5MB
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:10240', // 10MB
         ], [
             'name.required' => 'Accessibility name is required',
             'name.max' => 'Accessibility name cannot exceed 255 characters',
             'image.required' => 'Accessibility image is required',
             'image.image' => 'File must be an image',
-            'image.max' => 'Image size cannot exceed 5MB',
+            'image.max' => 'Image size cannot exceed 10MB',
         ]);
 
         try {
@@ -84,12 +84,12 @@ class AccessibilityController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
         ], [
             'name.required' => 'Accessibility name is required',
             'name.max' => 'Accessibility name cannot exceed 255 characters',
             'image.image' => 'File must be an image',
-            'image.max' => 'Image size cannot exceed 5MB',
+            'image.max' => 'Image size cannot exceed 10MB',
         ]);
 
         try {
@@ -172,7 +172,7 @@ class AccessibilityController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:255',
-            'banner_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'banner_images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
             'banner_alt_texts.*' => 'nullable|string|max:255',
             'banner_captions.*' => 'nullable|string|max:500',
             'existing_banner_alt_texts.*' => 'nullable|string|max:255',
@@ -185,7 +185,7 @@ class AccessibilityController extends Controller
             'meta_description.max' => 'Meta description cannot exceed 500 characters',
             'meta_keywords.max' => 'Meta keywords cannot exceed 255 characters',
             'banner_images.*.image' => 'Banner file must be an image',
-            'banner_images.*.max' => 'Banner image size cannot exceed 5MB',
+            'banner_images.*.max' => 'Banner image size cannot exceed 10MB',
         ]);
 
         try {

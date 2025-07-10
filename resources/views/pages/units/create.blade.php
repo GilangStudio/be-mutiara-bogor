@@ -233,7 +233,7 @@
                                 @error('main_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Recommended: 1200x800px, Max: 5MB</small>
+                                <small class="form-hint">Recommended: 1200x800px, Max: 10MB</small>
                                 <div class="mt-2" id="main-image-preview"></div>
                             </div>
                         </div>
@@ -247,7 +247,7 @@
                                 @error('banner_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Recommended: 1920x600px, Max: 5MB</small>
+                                <small class="form-hint">Recommended: 1920x600px, Max: 10MB</small>
                                 <div class="mt-2" id="banner-image-preview"></div>
                             </div>
                         </div>
@@ -261,7 +261,7 @@
                                 @error('floor_plan_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-hint">Recommended: 1200x800px, Max: 5MB</small>
+                                <small class="form-hint">Recommended: 1200x800px, Max: 10MB</small>
                                 <div class="mt-2" id="floor-plan-image-preview"></div>
                             </div>
                         </div>
@@ -295,7 +295,7 @@
                         @enderror
                         <small class="form-hint">
                             <i class="ti ti-info-circle me-1"></i>
-                            Select multiple images for unit gallery. Max: 5MB per image
+                            Select multiple images for unit gallery. Max: 10MB per image
                         </small>
                     </div>
                     
@@ -327,7 +327,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Image preview functionality
-        function setupImagePreview(inputId, previewId, maxFileSize = 5) {
+        function setupImagePreview(inputId, previewId, maxFileSize = 10) {
             const input = document.getElementById(inputId);
             const preview = document.getElementById(previewId);
             
@@ -395,8 +395,8 @@
                         return;
                     }
                     
-                    if (file.size > 5 * 1024 * 1024) {
-                        showAlert(galleryInput, 'danger', `File ${file.name} is too large (max: 5MB)`);
+                    if (file.size > 10 * 1024 * 1024) {
+                        showAlert(galleryInput, 'danger', `File ${file.name} is too large (max: 10MB)`);
                         galleryInput.value = '';
                         galleryFiles.splice(index, 1);
                         renderGalleryPreview();
